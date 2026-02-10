@@ -90,11 +90,11 @@ Plans:
   2. `build()` rejects workflows with cycles, producing a clear error rather than silently accepting invalid graphs
   3. `build()` rejects workflows referencing undefined steps, producing a clear error
   4. Builder API reads naturally in example code -- a Rust developer can understand the workflow structure from the builder calls alone
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: TBD
-- [ ] 05-02: TBD
+- [ ] 05-01-PLAN.md — WorkflowBuilder struct, BuilderError type, builder methods, module wiring and re-exports
+- [ ] 05-02-PLAN.md — build() validation logic with error collection, disconnected step detection, and comprehensive unit tests
 
 ### Phase 6: Examples
 **Goal**: Working example programs demonstrate every major concept so developers can learn by reading and running them
@@ -123,5 +123,5 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 2. OpenAI Provider | 2/2 | Complete | 2026-02-10 |
 | 3. Tool System | 2/2 | Complete | 2026-02-10 |
 | 4. Workflow Engine | 2/2 | Complete | 2026-02-10 |
-| 5. Builder API | 0/TBD | Not started | - |
+| 5. Builder API | 0/2 | Not started | - |
 | 6. Examples | 0/TBD | Not started | - |
