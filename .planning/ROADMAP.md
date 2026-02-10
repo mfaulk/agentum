@@ -15,7 +15,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Core Abstractions** - Define the Model trait, message types, and structured error types
 - [x] **Phase 2: OpenAI Provider** - Implement the first working LLM backend with raw HTTP
 - [x] **Phase 3: Tool System** - Define the Tool trait, integrate tool declarations with LLM calls, and dispatch tool execution
-- [ ] **Phase 4: Workflow Engine** - Build the DAG executor with topological ordering, step types, and data flow
+- [x] **Phase 4: Workflow Engine** - Build the DAG executor with topological ordering, step types, and data flow
 - [ ] **Phase 5: Builder API** - Add fluent workflow construction with build-time validation
 - [ ] **Phase 6: Examples** - Create working example programs that demonstrate all major concepts
 
@@ -78,8 +78,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Step types, Workflow struct with DAG validation, petgraph integration
-- [ ] 04-02-PLAN.md — Workflow executor with data flow, LLM step execution, and integration tests
+- [x] 04-01-PLAN.md — Step types, Workflow struct with DAG validation, petgraph integration
+- [x] 04-02-PLAN.md — Workflow executor with data flow, LLM step execution, and integration tests
 
 ### Phase 5: Builder API
 **Goal**: Developers construct workflows using a fluent builder pattern that catches structural errors at build time
@@ -122,6 +122,6 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 1. Core Abstractions | 2/2 | Complete | 2026-02-10 |
 | 2. OpenAI Provider | 2/2 | Complete | 2026-02-10 |
 | 3. Tool System | 2/2 | Complete | 2026-02-10 |
-| 4. Workflow Engine | 0/TBD | Not started | - |
+| 4. Workflow Engine | 2/2 | Complete | 2026-02-10 |
 | 5. Builder API | 0/TBD | Not started | - |
 | 6. Examples | 0/TBD | Not started | - |

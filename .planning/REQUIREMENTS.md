@@ -21,10 +21,10 @@
 
 ### Workflow Engine
 
-- [ ] **WF-01**: Workflows are directed acyclic graphs of steps, validated for cycles and missing dependencies
-- [ ] **WF-02**: Workflow executor runs steps in topological order, respecting dependency edges
-- [ ] **WF-03**: Steps can be LLM calls (with optional tools) or data transformation functions
-- [ ] **WF-04**: Output of a step is passed as input to its dependent steps (data flow)
+- [x] **WF-01**: Workflows are directed acyclic graphs of steps, validated for cycles and missing dependencies
+- [x] **WF-02**: Workflow executor runs steps in topological order, respecting dependency edges
+- [x] **WF-03**: Steps can be LLM calls (with optional tools) or data transformation functions
+- [x] **WF-04**: Output of a step is passed as input to its dependent steps (data flow)
 - [ ] **WF-05**: Workflows are constructed using a builder pattern API (`Workflow::builder()`)
 - [ ] **WF-06**: Builder validates the workflow at build time -- cycles and missing dependencies produce compile-time or construction-time errors
 
@@ -72,10 +72,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TOOL-02 | Phase 3 | Complete |
 | TOOL-03 | Phase 3 | Complete |
 | TOOL-04 | Phase 6 | Pending |
-| WF-01 | Phase 4 | Pending |
-| WF-02 | Phase 4 | Pending |
-| WF-03 | Phase 4 | Pending |
-| WF-04 | Phase 4 | Pending |
+| WF-01 | Phase 4 | Complete |
+| WF-02 | Phase 4 | Complete |
+| WF-03 | Phase 4 | Complete |
+| WF-04 | Phase 4 | Complete |
 | WF-05 | Phase 5 | Pending |
 | WF-06 | Phase 5 | Pending |
 | QLT-01 | Phase 1 | Complete |
