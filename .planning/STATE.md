@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 2 - OpenAI Provider (COMPLETE)
+**Current focus:** Phase 3 - Tool System (IN PROGRESS)
 
 ## Current Position
 
-Phase: 2 of 6 (OpenAI Provider) -- COMPLETE
-Plan: 2 of 2 in current phase (all complete)
-Status: Phase 02 complete, ready for Phase 03
-Last activity: 2026-02-10 -- Completed 02-02-PLAN.md
+Phase: 3 of 6 (Tool System)
+Plan: 1 of 2 in current phase (03-01 complete)
+Status: Executing Phase 03
+Last activity: 2026-02-10 -- Completed 03-01-PLAN.md
 
-Progress: [████░░░░░░] 33%
+Progress: [█████░░░░░] 42%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 5
 - Average duration: 2min
-- Total execution time: 0.13 hours
+- Total execution time: 0.15 hours
 
 **By Phase:**
 
@@ -29,9 +29,10 @@ Progress: [████░░░░░░] 33%
 |-------|-------|-------|----------|
 | 01-core-abstractions | 2 | 4min | 2min |
 | 02-openai-provider | 2 | 4min | 2min |
+| 03-tool-system | 1 | 1min | 1min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2min), 01-02 (2min), 02-01 (2min), 02-02 (2min)
+- Last 5 plans: 01-02 (2min), 02-01 (2min), 02-02 (2min), 03-01 (1min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -62,6 +63,10 @@ Recent decisions affecting current work:
 - 02-02: send_request checks HTTP status before consuming body (not error_for_status) for structured error messages
 - 02-02: Conversion functions are module-level private fns, not methods on types
 - 02-02: parse_response prioritizes tool_calls over content when both present
+- 03-01: Separate methods (name, description, parameters) on Tool trait rather than metadata struct
+- 03-01: Default definition() method assembles ToolDefinition from individual methods
+- 03-01: ToolRegistry owns tools via Box<dyn Tool> for simple lifetime story
+- 03-01: register() returns Error::DuplicateTool instead of silently overwriting
 
 ### Pending Todos
 
@@ -76,5 +81,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 02-02-PLAN.md (OpenAI Provider Implementation)
+Stopped at: Completed 03-01-PLAN.md (Tool Trait and Registry)
 Resume file: None
