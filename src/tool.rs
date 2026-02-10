@@ -41,7 +41,8 @@ use std::collections::HashMap;
 use async_trait::async_trait;
 
 use crate::error::{Error, Result};
-use crate::types::ToolDefinition;
+use crate::message::Message;
+use crate::types::{ToolCall, ToolDefinition};
 
 /// A tool that can be called by an LLM during a conversation.
 ///
@@ -166,6 +167,64 @@ impl ToolRegistry {
     /// [`Model::chat_with_tools()`](crate::model::Model::chat_with_tools).
     pub fn definitions(&self) -> Vec<ToolDefinition> {
         self.tools.values().map(|t| t.definition()).collect()
+    }
+
+    /// Execute a single tool call and return the result as a Message.
+    ///
+    /// Looks up the tool by name, parses the JSON arguments string into
+    /// a `serde_json::Value`, calls the tool's execute method, and wraps
+    /// the result in a [`Message::tool_result`] with the correct tool_call_id.
+    ///
+    /// # Errors
+    ///
+    /// - [`Error::ToolNotFound`] if no tool with the given name is registered
+    /// - [`Error::ResponseParse`] if the arguments string is not valid JSON
+    /// - [`Error::ToolExecutionFailed`] if the tool's execute method fails
+    pub async fn dispatch(&self, tool_call: &ToolCall) -> Result<Message> {
+        // 1. Look up the tool by name.
+        let tool = self
+            .tools
+            .get(&tool_call.name)
+            .ok_or_else(|| Error::ToolNotFound(tool_call.name.clone()))?;
+
+        // 2. Parse the JSON arguments string into a serde_json::Value.
+        //    The `?` operator uses the `#[from] serde_json::Error` on
+        //    Error::ResponseParse for automatic conversion.
+        let args: serde_json::Value = serde_json::from_str(&tool_call.arguments)?;
+
+        // 3. Execute the tool, wrapping any error in ToolExecutionFailed
+        //    to preserve the tool name for diagnostic context.
+        let result = tool.execute(args).await.map_err(|e| Error::ToolExecutionFailed {
+            name: tool_call.name.clone(),
+            message: e.to_string(),
+        })?;
+
+        // 4. Build and return the tool result message.
+        Ok(Message::tool_result(
+            tool_call.id.clone(),
+            tool_call.name.clone(),
+            result,
+        ))
+    }
+
+    /// Execute multiple tool calls sequentially and return results as Messages.
+    ///
+    /// Processes tool calls one at a time, in order. Stops immediately on the
+    /// first error (fail-fast behavior). Does not execute remaining tool calls
+    /// after a failure.
+    ///
+    /// # Errors
+    ///
+    /// Returns the first error encountered. Any tool calls after the failing
+    /// one are not executed.
+    pub async fn dispatch_all(&self, tool_calls: &[ToolCall]) -> Result<Vec<Message>> {
+        let mut results = Vec::with_capacity(tool_calls.len());
+        for tool_call in tool_calls {
+            // The `?` operator provides fail-fast: on first error, we return
+            // immediately without executing remaining tool calls.
+            results.push(self.dispatch(tool_call).await?);
+        }
+        Ok(results)
     }
 }
 
