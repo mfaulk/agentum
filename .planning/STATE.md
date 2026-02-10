@@ -5,33 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 2 - OpenAI Provider
+**Current focus:** Phase 2 - OpenAI Provider (COMPLETE)
 
 ## Current Position
 
-Phase: 2 of 6 (OpenAI Provider)
-Plan: 1 of 2 in current phase (02-01 complete)
-Status: Plan 02-01 complete, ready for 02-02
-Last activity: 2026-02-10 -- Completed 02-01-PLAN.md
+Phase: 2 of 6 (OpenAI Provider) -- COMPLETE
+Plan: 2 of 2 in current phase (all complete)
+Status: Phase 02 complete, ready for Phase 03
+Last activity: 2026-02-10 -- Completed 02-02-PLAN.md
 
-Progress: [███░░░░░░░] 25%
+Progress: [████░░░░░░] 33%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
+- Total plans completed: 4
 - Average duration: 2min
-- Total execution time: 0.10 hours
+- Total execution time: 0.13 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-core-abstractions | 2 | 4min | 2min |
-| 02-openai-provider | 1 | 2min | 2min |
+| 02-openai-provider | 2 | 4min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2min), 01-02 (2min), 02-01 (2min)
+- Last 5 plans: 01-01 (2min), 01-02 (2min), 02-01 (2min), 02-02 (2min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -59,6 +59,9 @@ Recent decisions affecting current work:
 - 02-01: All wire-format types are pub(crate) -- not part of public API
 - 02-01: ChatMessage uses serde tag='role' for internally tagged enum serialization
 - 02-01: Optional request fields use skip_serializing_if for absent-not-null behavior
+- 02-02: send_request checks HTTP status before consuming body (not error_for_status) for structured error messages
+- 02-02: Conversion functions are module-level private fns, not methods on types
+- 02-02: parse_response prioritizes tool_calls over content when both present
 
 ### Pending Todos
 
@@ -73,5 +76,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 02-01-PLAN.md (TLS Backend & Wire-Format Types)
+Stopped at: Completed 02-02-PLAN.md (OpenAI Provider Implementation)
 Resume file: None
