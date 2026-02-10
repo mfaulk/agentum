@@ -5,32 +5,33 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 1 - Core Abstractions
+**Current focus:** Phase 2 - OpenAI Provider
 
 ## Current Position
 
-Phase: 1 of 6 (Core Abstractions) -- COMPLETE
-Plan: 2 of 2 in current phase (all plans complete)
-Status: Phase 1 complete, ready for Phase 2
-Last activity: 2026-02-10 -- Completed 01-02-PLAN.md
+Phase: 2 of 6 (OpenAI Provider)
+Plan: 1 of 2 in current phase (02-01 complete)
+Status: Plan 02-01 complete, ready for 02-02
+Last activity: 2026-02-10 -- Completed 02-01-PLAN.md
 
-Progress: [██░░░░░░░░] 17%
+Progress: [███░░░░░░░] 25%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
+- Total plans completed: 3
 - Average duration: 2min
-- Total execution time: 0.07 hours
+- Total execution time: 0.10 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-core-abstractions | 2 | 4min | 2min |
+| 02-openai-provider | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (2min), 01-02 (2min)
+- Last 5 plans: 01-01 (2min), 01-02 (2min), 02-01 (2min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -54,6 +55,10 @@ Recent decisions affecting current work:
 - 01-02: async_trait chosen for dyn-safe Model trait (Box<dyn Model> compiles)
 - 01-02: Separate chat() and chat_with_tools() methods rather than optional tools parameter
 - 01-02: Send + Sync supertraits on Model for async task sharing
+- 02-01: reqwest 0.13 uses 'rustls' feature (not 'rustls-tls') for TLS backend
+- 02-01: All wire-format types are pub(crate) -- not part of public API
+- 02-01: ChatMessage uses serde tag='role' for internally tagged enum serialization
+- 02-01: Optional request fields use skip_serializing_if for absent-not-null behavior
 
 ### Pending Todos
 
@@ -62,11 +67,11 @@ None yet.
 ### Blockers/Concerns
 
 - ~~Verify current crate versions (tokio, reqwest, serde, petgraph, async-trait) during Phase 1 setup~~ RESOLVED: All versions verified in 01-01
-- Verify OpenAI API tool calling format against current docs during Phase 2
+- ~~Verify OpenAI API tool calling format against current docs during Phase 2~~ RESOLVED: Wire-format types defined in 02-01 with ToolCallWire/FunctionCallWire matching current OpenAI format
 - ~~Decide enum dispatch vs async-trait for Model during Phase 1 planning (01-02)~~ RESOLVED: async-trait chosen in 01-02
 
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 01-02-PLAN.md (Error Hierarchy & Model Trait) -- Phase 1 complete
+Stopped at: Completed 02-01-PLAN.md (TLS Backend & Wire-Format Types)
 Resume file: None
