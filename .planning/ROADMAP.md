@@ -59,11 +59,11 @@ Plans:
   2. An LLM step can include tool definitions that are sent to the model as function declarations in the API request
   3. When the model returns a tool call, the framework locates the matching tool, executes it, and returns the result to the caller
   4. Tool execution errors (unknown tool, bad arguments, execute failure) are captured as structured errors, not panics
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
-- [ ] 03-02: TBD
+- [ ] 03-01-PLAN.md — Tool trait, ToolRegistry struct, DuplicateTool error variant, and module registration
+- [ ] 03-02-PLAN.md — Dispatch and dispatch_all methods with unit tests for the full tool-calling round trip
 
 ### Phase 4: Workflow Engine
 **Goal**: Developers can define multi-step workflows as DAGs that execute in dependency order with data flowing between steps
@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Core Abstractions | 2/2 | Complete | 2026-02-10 |
 | 2. OpenAI Provider | 2/2 | Complete | 2026-02-10 |
-| 3. Tool System | 0/TBD | Not started | - |
+| 3. Tool System | 0/2 | Not started | - |
 | 4. Workflow Engine | 0/TBD | Not started | - |
 | 5. Builder API | 0/TBD | Not started | - |
 | 6. Examples | 0/TBD | Not started | - |
