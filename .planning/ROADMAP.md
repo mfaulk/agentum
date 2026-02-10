@@ -75,12 +75,11 @@ Plans:
   3. Steps can be either LLM calls (with optional tools) or pure data transformation functions
   4. Output of a completed step is available as input to all of its dependent steps
   5. A three-step linear workflow (transform -> LLM call -> transform) executes correctly end-to-end
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 04-01: TBD
-- [ ] 04-02: TBD
-- [ ] 04-03: TBD
+- [ ] 04-01-PLAN.md — Step types, Workflow struct with DAG validation, petgraph integration
+- [ ] 04-02-PLAN.md — Workflow executor with data flow, LLM step execution, and integration tests
 
 ### Phase 5: Builder API
 **Goal**: Developers construct workflows using a fluent builder pattern that catches structural errors at build time
