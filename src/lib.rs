@@ -16,6 +16,10 @@ pub mod message;
 pub mod model;
 pub mod types;
 
+// OpenAI provider module -- private until the provider implementation is
+// complete (Plan 02-02 will make this `pub mod openai`).
+mod openai;
+
 // Re-export primary types for convenience.
 // Users can `use agentic_framework::{Model, Message, ...}` instead of
 // reaching into submodules.
