@@ -30,11 +30,11 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. Model trait's response type can represent both plain text completions and tool call requests
   3. Error types distinguish between framework errors (bad workflow definition) and runtime errors (API failure, tool error) with clear context
   4. A developer reading the trait definition understands the full LLM interaction contract without looking at any provider
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: TBD
-- [ ] 01-02: TBD
+- [ ] 01-01-PLAN.md — Project scaffold, message types, and shared value types (ToolCall, ToolDefinition, ModelOptions, ModelResponse)
+- [ ] 01-02-PLAN.md — Error hierarchy, Model trait, and lib.rs public API re-exports
 
 ### Phase 2: OpenAI Provider
 **Goal**: Developers can make real LLM calls through the library using the OpenAI API
@@ -120,7 +120,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Core Abstractions | 0/TBD | Not started | - |
+| 1. Core Abstractions | 0/2 | Planned | - |
 | 2. OpenAI Provider | 0/TBD | Not started | - |
 | 3. Tool System | 0/TBD | Not started | - |
 | 4. Workflow Engine | 0/TBD | Not started | - |
