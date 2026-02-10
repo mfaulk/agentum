@@ -10,11 +10,14 @@
 //! - [`Message`] -- Conversation messages with role-based constructors
 //! - [`ModelResponse`] -- Either text content or tool call requests
 //! - [`OpenAiProvider`] -- OpenAI Chat Completions API provider
+//! - [`Tool`] -- Trait for defining LLM-callable tools
+//! - [`ToolRegistry`] -- Collects tools and produces definitions for model calls
 //! - [`Error`] -- Structured error types for all failure modes
 
 pub mod error;
 pub mod message;
 pub mod model;
+pub mod tool;
 pub mod types;
 
 pub mod openai;
@@ -26,6 +29,7 @@ pub use error::{Error, Result};
 pub use message::{Message, Role};
 pub use model::Model;
 pub use openai::OpenAiProvider;
+pub use tool::{Tool, ToolRegistry};
 pub use types::{ModelOptions, ModelResponse, ToolCall, ToolDefinition};
 
 #[cfg(test)]
