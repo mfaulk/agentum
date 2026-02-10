@@ -13,7 +13,7 @@ Build an educational Rust library for LLM-powered DAG workflows from the ground 
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Core Abstractions** - Define the Model trait, message types, and structured error types
-- [ ] **Phase 2: OpenAI Provider** - Implement the first working LLM backend with raw HTTP
+- [x] **Phase 2: OpenAI Provider** - Implement the first working LLM backend with raw HTTP
 - [ ] **Phase 3: Tool System** - Define the Tool trait, integrate tool declarations with LLM calls, and dispatch tool execution
 - [ ] **Phase 4: Workflow Engine** - Build the DAG executor with topological ordering, step types, and data flow
 - [ ] **Phase 5: Builder API** - Add fluent workflow construction with build-time validation
@@ -47,8 +47,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Fix reqwest TLS backend and define OpenAI wire-format serde types
-- [ ] 02-02-PLAN.md — OpenAiProvider struct with Model trait impl, conversion logic, and module registration
+- [x] 02-01-PLAN.md — Fix reqwest TLS backend and define OpenAI wire-format serde types
+- [x] 02-02-PLAN.md — OpenAiProvider struct with Model trait impl, conversion logic, and module registration
 
 ### Phase 3: Tool System
 **Goal**: Developers can define tools the LLM can call, and the framework handles the full tool-calling round trip
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Abstractions | 2/2 | Complete | 2026-02-10 |
-| 2. OpenAI Provider | 0/2 | Not started | - |
+| 2. OpenAI Provider | 2/2 | Complete | 2026-02-10 |
 | 3. Tool System | 0/TBD | Not started | - |
 | 4. Workflow Engine | 0/TBD | Not started | - |
 | 5. Builder API | 0/TBD | Not started | - |

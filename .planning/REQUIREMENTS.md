@@ -7,10 +7,10 @@
 
 ### Model Layer
 
-- [ ] **MOD-01**: Library defines a `Model` async trait with a method for chat completion that accepts messages and optional tool definitions
-- [ ] **MOD-02**: OpenAI provider implements the `Model` trait using raw HTTP (reqwest) against the chat completions API
-- [ ] **MOD-03**: Model trait supports returning tool call requests from the LLM response
-- [ ] **MOD-04**: OpenAI provider handles API key configuration and endpoint construction
+- [x] **MOD-01**: Library defines a `Model` async trait with a method for chat completion that accepts messages and optional tool definitions
+- [x] **MOD-02**: OpenAI provider implements the `Model` trait using raw HTTP (reqwest) against the chat completions API
+- [x] **MOD-03**: Model trait supports returning tool call requests from the LLM response
+- [x] **MOD-04**: OpenAI provider handles API key configuration and endpoint construction
 
 ### Tool System
 
@@ -30,8 +30,8 @@
 
 ### Quality
 
-- [ ] **QLT-01**: Library uses structured error types (thiserror) with clear context for each failure mode
-- [ ] **QLT-02**: Errors distinguish between framework errors (bad workflow definition) and runtime errors (API failure, tool error)
+- [x] **QLT-01**: Library uses structured error types (thiserror) with clear context for each failure mode
+- [x] **QLT-02**: Errors distinguish between framework errors (bad workflow definition) and runtime errors (API failure, tool error)
 - [ ] **QLT-03**: Working example programs demonstrate: single LLM call, LLM with tools, multi-step workflow, workflow with data flow
 
 ## v2 Requirements
@@ -64,10 +64,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MOD-01 | Phase 1 | Pending |
-| MOD-02 | Phase 2 | Pending |
-| MOD-03 | Phase 1 | Pending |
-| MOD-04 | Phase 2 | Pending |
+| MOD-01 | Phase 1 | Complete |
+| MOD-02 | Phase 2 | Complete |
+| MOD-03 | Phase 1 | Complete |
+| MOD-04 | Phase 2 | Complete |
 | TOOL-01 | Phase 3 | Pending |
 | TOOL-02 | Phase 3 | Pending |
 | TOOL-03 | Phase 3 | Pending |
@@ -78,8 +78,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WF-04 | Phase 4 | Pending |
 | WF-05 | Phase 5 | Pending |
 | WF-06 | Phase 5 | Pending |
-| QLT-01 | Phase 1 | Pending |
-| QLT-02 | Phase 1 | Pending |
+| QLT-01 | Phase 1 | Complete |
+| QLT-02 | Phase 1 | Complete |
 | QLT-03 | Phase 6 | Pending |
 
 **Coverage:**
