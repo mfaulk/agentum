@@ -21,6 +21,7 @@ pub mod tool;
 pub mod types;
 
 pub mod openai;
+pub mod workflow;
 
 // Re-export primary types for convenience.
 // Users can `use agentic_framework::{Model, Message, ...}` instead of
@@ -31,6 +32,7 @@ pub use model::Model;
 pub use openai::OpenAiProvider;
 pub use tool::{Tool, ToolRegistry};
 pub use types::{ModelOptions, ModelResponse, ToolCall, ToolDefinition};
+pub use workflow::{Step, Workflow};
 
 #[cfg(test)]
 mod tests {
