@@ -233,3 +233,218 @@ impl Default for ToolRegistry {
         Self::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::message::Role;
+    use crate::types::ToolCall;
+
+    // Compile-time verification that Tool is dyn-safe.
+    // This function never runs -- it just needs to compile.
+    fn _assert_tool_is_dyn_safe(_: Box<dyn Tool>) {}
+
+    /// A simple test tool that echoes its input back.
+    struct EchoTool;
+
+    #[async_trait]
+    impl Tool for EchoTool {
+        fn name(&self) -> &str {
+            "echo"
+        }
+        fn description(&self) -> &str {
+            "Echoes the input message back"
+        }
+        fn parameters(&self) -> serde_json::Value {
+            serde_json::json!({
+                "type": "object",
+                "properties": {
+                    "message": { "type": "string" }
+                },
+                "required": ["message"]
+            })
+        }
+        async fn execute(&self, args: serde_json::Value) -> Result<String> {
+            let message = args["message"].as_str().unwrap_or("no message");
+            Ok(format!("echo: {}", message))
+        }
+    }
+
+    /// A tool that always fails, for testing error handling.
+    struct FailingTool;
+
+    #[async_trait]
+    impl Tool for FailingTool {
+        fn name(&self) -> &str {
+            "failing"
+        }
+        fn description(&self) -> &str {
+            "Always fails"
+        }
+        fn parameters(&self) -> serde_json::Value {
+            serde_json::json!({"type": "object"})
+        }
+        async fn execute(&self, _args: serde_json::Value) -> Result<String> {
+            Err(Error::ToolExecutionFailed {
+                name: "failing".into(),
+                message: "intentional failure".into(),
+            })
+        }
+    }
+
+    #[test]
+    fn test_register_and_get() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        assert!(registry.get("echo").is_some());
+        assert!(registry.get("unknown").is_none());
+    }
+
+    #[test]
+    fn test_duplicate_registration() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        let err = registry.register(Box::new(EchoTool)).unwrap_err();
+        assert!(matches!(err, Error::DuplicateTool(_)));
+    }
+
+    #[test]
+    fn test_definitions() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        let defs = registry.definitions();
+        assert_eq!(defs.len(), 1);
+        assert_eq!(defs[0].name, "echo");
+        assert_eq!(defs[0].description, "Echoes the input message back");
+        assert_eq!(
+            defs[0].parameters,
+            serde_json::json!({
+                "type": "object",
+                "properties": {
+                    "message": { "type": "string" }
+                },
+                "required": ["message"]
+            })
+        );
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_success() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        let tool_call = ToolCall {
+            id: "call_123".to_string(),
+            name: "echo".to_string(),
+            arguments: r#"{"message":"hello"}"#.to_string(),
+        };
+
+        let msg = registry.dispatch(&tool_call).await.unwrap();
+        assert_eq!(msg.role, Role::Tool);
+        assert_eq!(msg.tool_call_id, Some("call_123".to_string()));
+        assert_eq!(msg.name, Some("echo".to_string()));
+        assert_eq!(msg.content, "echo: hello");
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_tool_not_found() {
+        let registry = ToolRegistry::new();
+
+        let tool_call = ToolCall {
+            id: "call_456".to_string(),
+            name: "nonexistent".to_string(),
+            arguments: "{}".to_string(),
+        };
+
+        let err = registry.dispatch(&tool_call).await.unwrap_err();
+        assert!(matches!(err, Error::ToolNotFound(ref name) if name == "nonexistent"));
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_invalid_json() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        let tool_call = ToolCall {
+            id: "call_789".to_string(),
+            name: "echo".to_string(),
+            arguments: "not json".to_string(),
+        };
+
+        let err = registry.dispatch(&tool_call).await.unwrap_err();
+        assert!(matches!(err, Error::ResponseParse(_)));
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_tool_execution_failure() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(FailingTool)).unwrap();
+
+        let tool_call = ToolCall {
+            id: "call_fail".to_string(),
+            name: "failing".to_string(),
+            arguments: "{}".to_string(),
+        };
+
+        let err = registry.dispatch(&tool_call).await.unwrap_err();
+        assert!(
+            matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing")
+        );
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_all_success() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        let tool_calls = vec![
+            ToolCall {
+                id: "call_a".to_string(),
+                name: "echo".to_string(),
+                arguments: r#"{"message":"first"}"#.to_string(),
+            },
+            ToolCall {
+                id: "call_b".to_string(),
+                name: "echo".to_string(),
+                arguments: r#"{"message":"second"}"#.to_string(),
+            },
+        ];
+
+        let msgs = registry.dispatch_all(&tool_calls).await.unwrap();
+        assert_eq!(msgs.len(), 2);
+        assert_eq!(msgs[0].content, "echo: first");
+        assert_eq!(msgs[0].tool_call_id, Some("call_a".to_string()));
+        assert_eq!(msgs[1].content, "echo: second");
+        assert_eq!(msgs[1].tool_call_id, Some("call_b".to_string()));
+    }
+
+    #[tokio::test]
+    async fn test_dispatch_all_fail_fast() {
+        let mut registry = ToolRegistry::new();
+        registry.register(Box::new(FailingTool)).unwrap();
+        registry.register(Box::new(EchoTool)).unwrap();
+
+        // FailingTool's call first, then EchoTool's call.
+        // dispatch_all should fail on the first call and never reach the second.
+        let tool_calls = vec![
+            ToolCall {
+                id: "call_fail".to_string(),
+                name: "failing".to_string(),
+                arguments: "{}".to_string(),
+            },
+            ToolCall {
+                id: "call_echo".to_string(),
+                name: "echo".to_string(),
+                arguments: r#"{"message":"should not run"}"#.to_string(),
+            },
+        ];
+
+        let err = registry.dispatch_all(&tool_calls).await.unwrap_err();
+        assert!(
+            matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing")
+        );
+    }
+}
