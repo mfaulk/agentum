@@ -44,11 +44,11 @@ Plans:
   1. OpenAI provider sends a chat completion request via raw HTTP (reqwest) and returns a parsed response through the Model trait
   2. Provider reads the API key from configuration and constructs correct endpoint URLs
   3. API errors (auth failure, rate limit, malformed response) surface as structured error types, not panics or opaque strings
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
-- [ ] 02-02: TBD
+- [ ] 02-01-PLAN.md — Fix reqwest TLS backend and define OpenAI wire-format serde types
+- [ ] 02-02-PLAN.md — OpenAiProvider struct with Model trait impl, conversion logic, and module registration
 
 ### Phase 3: Tool System
 **Goal**: Developers can define tools the LLM can call, and the framework handles the full tool-calling round trip
@@ -121,7 +121,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Core Abstractions | 2/2 | Complete | 2026-02-10 |
-| 2. OpenAI Provider | 0/TBD | Not started | - |
+| 2. OpenAI Provider | 0/2 | Not started | - |
 | 3. Tool System | 0/TBD | Not started | - |
 | 4. Workflow Engine | 0/TBD | Not started | - |
 | 5. Builder API | 0/TBD | Not started | - |
