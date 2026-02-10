@@ -30,6 +30,10 @@ pub enum Error {
     #[error("tool execution failed: {name}: {message}")]
     ToolExecutionFailed { name: String, message: String },
 
+    /// A tool with this name is already registered.
+    #[error("duplicate tool: {0}")]
+    DuplicateTool(String),
+
     // --- Framework errors (structural/configuration problems) ---
 
     /// The workflow definition is structurally invalid (e.g., contains cycles).
