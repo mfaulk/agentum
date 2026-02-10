@@ -26,7 +26,7 @@
 - [ ] **WF-03**: Steps can be LLM calls (with optional tools) or data transformation functions
 - [ ] **WF-04**: Output of a step is passed as input to its dependent steps (data flow)
 - [ ] **WF-05**: Workflows are constructed using a builder pattern API (`Workflow::builder()`)
-- [ ] **WF-06**: Builder validates the workflow at build time — cycles and missing dependencies produce compile-time or construction-time errors
+- [ ] **WF-06**: Builder validates the workflow at build time -- cycles and missing dependencies produce compile-time or construction-time errors
 
 ### Quality
 
@@ -51,11 +51,11 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Feature | Reason |
 |---------|--------|
-| Autonomous agent loops | Deliberate omission — workflows are structured, not open-ended |
+| Autonomous agent loops | Deliberate omission -- workflows are structured, not open-ended |
 | Streaming responses | Adds complexity without educational value for v1 |
 | RAG / vector store integration | Separate concern, not core to workflow patterns |
 | Memory / conversation persistence | Adds state management complexity beyond v1 scope |
-| Derive macros for tool definition | Magic that hides the pattern — against educational goal |
+| Derive macros for tool definition | Magic that hides the pattern -- against educational goal |
 | CLI tool or web UI | This is a library with examples |
 
 ## Traceability
@@ -64,29 +64,29 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MOD-01 | — | Pending |
-| MOD-02 | — | Pending |
-| MOD-03 | — | Pending |
-| MOD-04 | — | Pending |
-| TOOL-01 | — | Pending |
-| TOOL-02 | — | Pending |
-| TOOL-03 | — | Pending |
-| TOOL-04 | — | Pending |
-| WF-01 | — | Pending |
-| WF-02 | — | Pending |
-| WF-03 | — | Pending |
-| WF-04 | — | Pending |
-| WF-05 | — | Pending |
-| WF-06 | — | Pending |
-| QLT-01 | — | Pending |
-| QLT-02 | — | Pending |
-| QLT-03 | — | Pending |
+| MOD-01 | Phase 1 | Pending |
+| MOD-02 | Phase 2 | Pending |
+| MOD-03 | Phase 1 | Pending |
+| MOD-04 | Phase 2 | Pending |
+| TOOL-01 | Phase 3 | Pending |
+| TOOL-02 | Phase 3 | Pending |
+| TOOL-03 | Phase 3 | Pending |
+| TOOL-04 | Phase 6 | Pending |
+| WF-01 | Phase 4 | Pending |
+| WF-02 | Phase 4 | Pending |
+| WF-03 | Phase 4 | Pending |
+| WF-04 | Phase 4 | Pending |
+| WF-05 | Phase 5 | Pending |
+| WF-06 | Phase 5 | Pending |
+| QLT-01 | Phase 1 | Pending |
+| QLT-02 | Phase 1 | Pending |
+| QLT-03 | Phase 6 | Pending |
 
 **Coverage:**
 - v1 requirements: 17 total
-- Mapped to phases: 0
-- Unmapped: 17 ⚠️
+- Mapped to phases: 17
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-10*
-*Last updated: 2026-02-10 after initial definition*
+*Last updated: 2026-02-10 after roadmap creation*
