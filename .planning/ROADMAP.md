@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Core Abstractions** - Define the Model trait, message types, and structured error types
 - [x] **Phase 2: OpenAI Provider** - Implement the first working LLM backend with raw HTTP
-- [ ] **Phase 3: Tool System** - Define the Tool trait, integrate tool declarations with LLM calls, and dispatch tool execution
+- [x] **Phase 3: Tool System** - Define the Tool trait, integrate tool declarations with LLM calls, and dispatch tool execution
 - [ ] **Phase 4: Workflow Engine** - Build the DAG executor with topological ordering, step types, and data flow
 - [ ] **Phase 5: Builder API** - Add fluent workflow construction with build-time validation
 - [ ] **Phase 6: Examples** - Create working example programs that demonstrate all major concepts
@@ -62,8 +62,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Tool trait, ToolRegistry struct, DuplicateTool error variant, and module registration
-- [ ] 03-02-PLAN.md — Dispatch and dispatch_all methods with unit tests for the full tool-calling round trip
+- [x] 03-01-PLAN.md — Tool trait, ToolRegistry struct, DuplicateTool error variant, and module registration
+- [x] 03-02-PLAN.md — Dispatch and dispatch_all methods with unit tests for the full tool-calling round trip
 
 ### Phase 4: Workflow Engine
 **Goal**: Developers can define multi-step workflows as DAGs that execute in dependency order with data flowing between steps
