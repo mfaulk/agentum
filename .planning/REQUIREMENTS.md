@@ -14,9 +14,9 @@
 
 ### Tool System
 
-- [ ] **TOOL-01**: Library defines a `Tool` trait with name, description, JSON schema for parameters, and an execute method
-- [ ] **TOOL-02**: LLM step can include tool definitions that are sent to the model as function declarations
-- [ ] **TOOL-03**: When the model returns a tool call, the framework executes the matching tool and returns the result to the caller
+- [x] **TOOL-01**: Library defines a `Tool` trait with name, description, JSON schema for parameters, and an execute method
+- [x] **TOOL-02**: LLM step can include tool definitions that are sent to the model as function declarations
+- [x] **TOOL-03**: When the model returns a tool call, the framework executes the matching tool and returns the result to the caller
 - [ ] **TOOL-04**: Library includes example tools (e.g. calculator, mock weather) that demonstrate the tool definition pattern
 
 ### Workflow Engine
@@ -68,9 +68,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MOD-02 | Phase 2 | Complete |
 | MOD-03 | Phase 1 | Complete |
 | MOD-04 | Phase 2 | Complete |
-| TOOL-01 | Phase 3 | Pending |
-| TOOL-02 | Phase 3 | Pending |
-| TOOL-03 | Phase 3 | Pending |
+| TOOL-01 | Phase 3 | Complete |
+| TOOL-02 | Phase 3 | Complete |
+| TOOL-03 | Phase 3 | Complete |
 | TOOL-04 | Phase 6 | Pending |
 | WF-01 | Phase 4 | Pending |
 | WF-02 | Phase 4 | Pending |

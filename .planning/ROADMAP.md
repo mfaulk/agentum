@@ -122,7 +122,7 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 |-------|----------------|--------|-----------|
 | 1. Core Abstractions | 2/2 | Complete | 2026-02-10 |
 | 2. OpenAI Provider | 2/2 | Complete | 2026-02-10 |
-| 3. Tool System | 0/2 | Not started | - |
+| 3. Tool System | 2/2 | Complete | 2026-02-10 |
 | 4. Workflow Engine | 0/TBD | Not started | - |
 | 5. Builder API | 0/TBD | Not started | - |
 | 6. Examples | 0/TBD | Not started | - |
