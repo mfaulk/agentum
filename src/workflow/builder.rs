@@ -26,6 +26,12 @@
 //!     .build()?;
 //! ```
 
+use std::collections::{HashMap, HashSet};
+
+use petgraph::algo::toposort;
+use petgraph::graph::{DiGraph, NodeIndex};
+use petgraph::Direction;
+
 use crate::error::{BuilderError, BuilderErrors, Result};
 use crate::model::Model;
 use crate::tool::ToolRegistry;
@@ -179,40 +185,126 @@ impl WorkflowBuilder {
 
     /// Validate and build the [`Workflow`].
     ///
-    /// This stub delegates to [`Workflow::new`] and wraps any error in a
-    /// single-element [`BuilderErrors`]. Plan 02 replaces this with full
-    /// validation logic (disconnected step detection, error collection).
+    /// Runs all validation checks and collects every error before returning,
+    /// so developers see all problems at once rather than fixing them one at
+    /// a time.
+    ///
+    /// # Validation order
+    ///
+    /// 1. **Empty workflow** -- no steps added (returns immediately)
+    /// 2. **Duplicate step names** -- same name added more than once
+    /// 3. **Missing step references** -- edges referencing undefined steps
+    /// 4. **Cycles** -- circular dependencies via petgraph toposort
+    /// 5. **Disconnected steps** -- steps with no edges in a multi-step workflow
+    ///    (single-step workflows are exempt)
     ///
     /// # Errors
     ///
-    /// Returns [`BuilderErrors`] if the workflow is structurally invalid.
+    /// Returns [`BuilderErrors`] containing one or more [`BuilderError`] variants
+    /// if any validation check fails.
     pub fn build(self) -> std::result::Result<Workflow, BuilderErrors> {
+        let mut errors: Vec<BuilderError> = Vec::new();
+
+        // 1. Empty workflow check -- return immediately since there is nothing
+        //    else to validate.
+        if self.steps.is_empty() {
+            return Err(BuilderErrors {
+                errors: vec![BuilderError::EmptyWorkflow],
+            });
+        }
+
+        // 2. Duplicate step detection.
+        let mut seen_names: HashSet<&str> = HashSet::new();
+        let mut unique_names: HashSet<&str> = HashSet::new();
+        for (name, _) in &self.steps {
+            if !seen_names.insert(name.as_str()) {
+                // Only report each duplicate name once.
+                if unique_names.insert(name.as_str()) {
+                    errors.push(BuilderError::DuplicateStep(name.clone()));
+                }
+            } else {
+                unique_names.insert(name.as_str());
+            }
+        }
+
+        // Collect the set of all defined step names (using first occurrence).
+        let step_names: HashSet<&str> = self.steps.iter().map(|(n, _)| n.as_str()).collect();
+
+        // 3. Build the petgraph DiGraph from first occurrences.
+        let mut graph: DiGraph<String, ()> = DiGraph::new();
+        let mut node_map: HashMap<String, NodeIndex> = HashMap::new();
+
+        // Add each unique step name as a node (skip duplicates so the graph
+        // has exactly one node per name).
+        for (name, _) in &self.steps {
+            if !node_map.contains_key(name) {
+                let idx = graph.add_node(name.clone());
+                node_map.insert(name.clone(), idx);
+            }
+        }
+
+        // 4. Missing step detection on edges.
+        // Track already-reported missing names to avoid duplicate errors.
+        let mut reported_missing: HashSet<String> = HashSet::new();
+
+        for (from, to) in &self.edges {
+            let from_exists = step_names.contains(from.as_str());
+            let to_exists = step_names.contains(to.as_str());
+
+            if !from_exists && reported_missing.insert(from.clone()) {
+                errors.push(BuilderError::MissingStep {
+                    edge_endpoint: from.clone(),
+                });
+            }
+            if !to_exists && reported_missing.insert(to.clone()) {
+                errors.push(BuilderError::MissingStep {
+                    edge_endpoint: to.clone(),
+                });
+            }
+
+            // Only add the edge to the graph if both endpoints are valid
+            // (avoids panics from missing node indices).
+            if from_exists && to_exists {
+                let from_idx = node_map[from];
+                let to_idx = node_map[to];
+                graph.add_edge(from_idx, to_idx, ());
+            }
+        }
+
+        // 5. Cycle detection via petgraph toposort.
+        if let Err(cycle) = toposort(&graph, None) {
+            errors.push(BuilderError::CycleDetected(
+                graph[cycle.node_id()].clone(),
+            ));
+        }
+
+        // 6. Disconnected step detection (single-step workflows are exempt).
+        if self.steps.len() > 1 {
+            for (name, idx) in &node_map {
+                let has_incoming = graph
+                    .neighbors_directed(*idx, Direction::Incoming)
+                    .count()
+                    > 0;
+                let has_outgoing = graph
+                    .neighbors_directed(*idx, Direction::Outgoing)
+                    .count()
+                    > 0;
+
+                if !has_incoming && !has_outgoing {
+                    errors.push(BuilderError::DisconnectedStep(name.clone()));
+                }
+            }
+        }
+
+        // 7. Return result.
+        if !errors.is_empty() {
+            return Err(BuilderErrors { errors });
+        }
+
+        // All checks passed -- construct the workflow via Workflow::new.
+        // Since we already validated everything, this should not fail.
         Workflow::new(self.steps, self.edges).map_err(|e| BuilderErrors {
-            errors: vec![match e {
-                crate::error::Error::InvalidWorkflow(msg) => {
-                    if msg.contains("duplicate step name") {
-                        let name = msg.strip_prefix("duplicate step name: ")
-                            .unwrap_or(&msg)
-                            .to_string();
-                        BuilderError::DuplicateStep(name)
-                    } else if msg.contains("cycle detected") {
-                        let name = msg.strip_prefix("cycle detected involving step: ")
-                            .unwrap_or(&msg)
-                            .to_string();
-                        BuilderError::CycleDetected(name)
-                    } else {
-                        // Fallback: wrap the message as a cycle error
-                        BuilderError::CycleDetected(msg)
-                    }
-                }
-                crate::error::Error::MissingDependency { step: _, dependency } => {
-                    BuilderError::MissingStep { edge_endpoint: dependency }
-                }
-                other => {
-                    // Unexpected error type -- wrap as a generic message
-                    BuilderError::CycleDetected(other.to_string())
-                }
-            }],
+            errors: vec![BuilderError::CycleDetected(e.to_string())],
         })
     }
 }
