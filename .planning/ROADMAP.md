@@ -106,11 +106,10 @@ Plans:
   3. Example program exists for a multi-step workflow with data flow between steps
   4. Example tools (e.g. calculator, mock weather) exist and demonstrate the tool definition pattern clearly
   5. Each example compiles and runs successfully (API-dependent examples document required environment variables)
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 06-01: TBD
-- [ ] 06-02: TBD
+- [ ] 06-01-PLAN.md — Three standalone example programs: simple_chat (single LLM call), tool_calling (Tool trait + dispatch + both response paths), workflow (summarize-then-translate pipeline with data flow)
 
 ## Progress
 
@@ -124,4 +123,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Tool System | 2/2 | Complete | 2026-02-10 |
 | 4. Workflow Engine | 2/2 | Complete | 2026-02-10 |
 | 5. Builder API | 2/2 | Complete | 2026-02-10 |
-| 6. Examples | 0/TBD | Not started | - |
+| 6. Examples | 0/1 | Not started | - |
