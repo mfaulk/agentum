@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 6 - Integration Examples
+**Current focus:** Phase 6 - Integration Examples -- COMPLETE
 
 ## Current Position
 
-Phase: 5 of 6 (Builder API) -- COMPLETE
-Plan: 2 of 2 in current phase (05-02 complete)
-Status: Phase 5 complete, ready for Phase 6
-Last activity: 2026-02-10 -- Completed 05-02-PLAN.md
+Phase: 6 of 6 (Integration Examples) -- COMPLETE
+Plan: 1 of 1 in current phase (06-01 complete)
+Status: All phases complete. Project finished.
+Last activity: 2026-02-11 -- Completed 06-01-PLAN.md
 
-Progress: [██████████] 83%
+Progress: [████████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
+- Total plans completed: 11
 - Average duration: 2min
-- Total execution time: 0.30 hours
+- Total execution time: 0.35 hours
 
 **By Phase:**
 
@@ -32,9 +32,10 @@ Progress: [██████████] 83%
 | 03-tool-system | 2 | 2min | 1min |
 | 04-workflow-engine | 2 | 4min | 2min |
 | 05-builder-api | 2 | 4min | 2min |
+| 06-examples | 1 | 3min | 3min |
 
 **Recent Trend:**
-- Last 5 plans: 03-02 (1min), 04-01 (2min), 04-02 (2min), 05-01 (2min), 05-02 (2min)
+- Last 5 plans: 04-01 (2min), 04-02 (2min), 05-01 (2min), 05-02 (2min), 06-01 (3min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -86,6 +87,10 @@ Recent decisions affecting current work:
 - 05-02: Disconnected check uses node_map.len() (unique steps) not self.steps.len() -- prevents false errors with duplicates
 - 05-02: Error collection runs all 5 checks (empty returns immediately, rest always run)
 - 05-02: Separate reported_duplicates HashSet avoids conflating seen/reported tracking state
+- 06-01: Manual API key check with helpful error messages instead of from_env() for example-quality UX
+- 06-01: gpt-4o-mini model for all examples to minimize API costs
+- 06-01: Self-contained tool definitions in tool_calling.rs (no shared modules)
+- 06-01: Summarize-then-translate pipeline as realistic workflow use case
 
 ### Pending Todos
 
@@ -99,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-10
-Stopped at: Completed 05-02-PLAN.md (build() validation and comprehensive tests -- Phase 5 complete)
+Last session: 2026-02-11
+Stopped at: Completed 06-01-PLAN.md (all three integration examples -- Phase 6 and project complete)
 Resume file: None
