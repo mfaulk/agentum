@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 4 - Workflow Engine (COMPLETE)
+**Current focus:** Phase 5 - Builder API
 
 ## Current Position
 
-Phase: 4 of 6 (Workflow Engine)
-Plan: 2 of 2 in current phase (04-02 complete -- phase done)
-Status: Phase 04 Complete
-Last activity: 2026-02-10 -- Completed 04-02-PLAN.md
+Phase: 5 of 6 (Builder API)
+Plan: 1 of 2 in current phase (05-01 complete)
+Status: Executing
+Last activity: 2026-02-10 -- Completed 05-01-PLAN.md
 
-Progress: [████████░░] 67%
+Progress: [█████████░] 75%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 2min
-- Total execution time: 0.23 hours
+- Total execution time: 0.26 hours
 
 **By Phase:**
 
@@ -31,9 +31,10 @@ Progress: [████████░░] 67%
 | 02-openai-provider | 2 | 4min | 2min |
 | 03-tool-system | 2 | 2min | 1min |
 | 04-workflow-engine | 2 | 4min | 2min |
+| 05-builder-api | 1 | 2min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (2min), 03-01 (1min), 03-02 (1min), 04-01 (2min), 04-02 (2min)
+- Last 5 plans: 03-01 (1min), 03-02 (1min), 04-01 (2min), 04-02 (2min), 05-01 (2min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -78,6 +79,10 @@ Recent decisions affecting current work:
 - 04-02: execute() is a method on Workflow (impl block in executor.rs) for discoverability
 - 04-02: execute_llm_step is a private free function, not a method, to keep Workflow's public API clean
 - 04-02: MockModel in test module returns fixed text responses for deterministic integration testing
+- 05-01: Consuming self (move semantics) for all builder methods -- consistent with ModelOptions pattern, required by non-Clone Step
+- 05-01: BuilderErrors wrapper struct rather than raw Vec<BuilderError> -- enables Display and std::error::Error
+- 05-01: Stub build() delegates to Workflow::new with error translation -- Plan 02 replaces with full validation
+- 05-01: Forward references allowed (edge before step) -- validation deferred entirely to build() time
 
 ### Pending Todos
 
@@ -92,5 +97,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 04-02-PLAN.md (Workflow Executor) -- Phase 04 complete
+Stopped at: Completed 05-01-PLAN.md (WorkflowBuilder struct and builder methods)
 Resume file: None
