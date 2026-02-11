@@ -51,3 +51,70 @@ pub enum Error {
 
 /// Convenience Result alias for the agentic-framework library.
 pub type Result<T> = std::result::Result<T, Error>;
+
+/// Errors that can occur during workflow construction via [`WorkflowBuilder`].
+///
+/// Each variant represents a specific structural problem found at `build()` time.
+/// The builder collects all errors rather than failing at the first one, so
+/// developers see every problem at once.
+///
+/// [`WorkflowBuilder`]: crate::workflow::builder::WorkflowBuilder
+#[derive(Debug)]
+pub enum BuilderError {
+    /// A step name was used more than once.
+    DuplicateStep(String),
+    /// An edge references a step that was not added to the builder.
+    MissingStep { edge_endpoint: String },
+    /// The workflow graph contains a cycle involving the named step.
+    CycleDetected(String),
+    /// A step has no connections to any other step in a multi-step workflow.
+    DisconnectedStep(String),
+    /// No steps were added to the builder.
+    EmptyWorkflow,
+}
+
+impl std::fmt::Display for BuilderError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            BuilderError::DuplicateStep(name) => write!(f, "duplicate step name: {name}"),
+            BuilderError::MissingStep { edge_endpoint } => {
+                write!(f, "edge references undefined step: {edge_endpoint}")
+            }
+            BuilderError::CycleDetected(step) => {
+                write!(f, "cycle detected involving step: {step}")
+            }
+            BuilderError::DisconnectedStep(name) => {
+                write!(f, "step '{name}' has no edges to any other step")
+            }
+            BuilderError::EmptyWorkflow => write!(f, "workflow has no steps"),
+        }
+    }
+}
+
+impl std::error::Error for BuilderError {}
+
+/// A collection of [`BuilderError`]s returned by [`WorkflowBuilder::build`].
+///
+/// The builder validates the entire workflow and collects all errors, so
+/// developers can fix every problem in one pass.
+///
+/// [`WorkflowBuilder::build`]: crate::workflow::builder::WorkflowBuilder::build
+#[derive(Debug)]
+pub struct BuilderErrors {
+    pub errors: Vec<BuilderError>,
+}
+
+impl std::fmt::Display for BuilderErrors {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let messages: Vec<String> = self.errors.iter().map(|e| e.to_string()).collect();
+        write!(f, "{}", messages.join("; "))
+    }
+}
+
+impl std::error::Error for BuilderErrors {}
+
+impl From<BuilderErrors> for Error {
+    fn from(errors: BuilderErrors) -> Self {
+        Error::InvalidWorkflow(errors.to_string())
+    }
+}

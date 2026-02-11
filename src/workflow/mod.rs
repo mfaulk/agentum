@@ -5,9 +5,11 @@
 //! The [`Workflow`] struct validates the graph at construction time and
 //! pre-computes a topological execution order.
 
+pub mod builder;
 pub mod executor;
 pub mod step;
 pub mod workflow;
 
+pub use builder::WorkflowBuilder;
 pub use step::{Step, StepInput, StepOutput};
 pub use workflow::Workflow;

@@ -26,13 +26,13 @@ pub mod workflow;
 // Re-export primary types for convenience.
 // Users can `use agentic_framework::{Model, Message, ...}` instead of
 // reaching into submodules.
-pub use error::{Error, Result};
+pub use error::{BuilderError, BuilderErrors, Error, Result};
 pub use message::{Message, Role};
 pub use model::Model;
 pub use openai::OpenAiProvider;
 pub use tool::{Tool, ToolRegistry};
 pub use types::{ModelOptions, ModelResponse, ToolCall, ToolDefinition};
-pub use workflow::{Step, Workflow};
+pub use workflow::{Step, Workflow, WorkflowBuilder};
 
 #[cfg(test)]
 mod tests {

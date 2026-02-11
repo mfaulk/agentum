@@ -31,6 +31,24 @@ pub struct Workflow {
 }
 
 impl Workflow {
+    /// Create a [`WorkflowBuilder`](super::builder::WorkflowBuilder) for fluent workflow construction.
+    ///
+    /// The builder provides a chainable API for adding steps and edges,
+    /// with build-time validation including disconnected step detection.
+    ///
+    /// # Example
+    ///
+    /// ```ignore
+    /// let wf = Workflow::builder()
+    ///     .transform_step("A", |_| Ok(json!("a")))
+    ///     .transform_step("B", |_| Ok(json!("b")))
+    ///     .edge("A", "B")
+    ///     .build()?;
+    /// ```
+    pub fn builder() -> super::builder::WorkflowBuilder {
+        super::builder::WorkflowBuilder::new()
+    }
+
     /// Create a new workflow from steps and dependency edges.
     ///
     /// Validates the graph at construction time:
