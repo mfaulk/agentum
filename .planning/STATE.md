@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-02-10)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 5 - Builder API
+**Current focus:** Phase 6 - Integration Examples
 
 ## Current Position
 
-Phase: 5 of 6 (Builder API)
-Plan: 1 of 2 in current phase (05-01 complete)
-Status: Executing
-Last activity: 2026-02-10 -- Completed 05-01-PLAN.md
+Phase: 5 of 6 (Builder API) -- COMPLETE
+Plan: 2 of 2 in current phase (05-02 complete)
+Status: Phase 5 complete, ready for Phase 6
+Last activity: 2026-02-10 -- Completed 05-02-PLAN.md
 
-Progress: [█████████░] 75%
+Progress: [██████████] 83%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
+- Total plans completed: 10
 - Average duration: 2min
-- Total execution time: 0.26 hours
+- Total execution time: 0.30 hours
 
 **By Phase:**
 
@@ -31,10 +31,10 @@ Progress: [█████████░] 75%
 | 02-openai-provider | 2 | 4min | 2min |
 | 03-tool-system | 2 | 2min | 1min |
 | 04-workflow-engine | 2 | 4min | 2min |
-| 05-builder-api | 1 | 2min | 2min |
+| 05-builder-api | 2 | 4min | 2min |
 
 **Recent Trend:**
-- Last 5 plans: 03-01 (1min), 03-02 (1min), 04-01 (2min), 04-02 (2min), 05-01 (2min)
+- Last 5 plans: 03-02 (1min), 04-01 (2min), 04-02 (2min), 05-01 (2min), 05-02 (2min)
 - Trend: consistent
 
 *Updated after each plan completion*
@@ -83,6 +83,9 @@ Recent decisions affecting current work:
 - 05-01: BuilderErrors wrapper struct rather than raw Vec<BuilderError> -- enables Display and std::error::Error
 - 05-01: Stub build() delegates to Workflow::new with error translation -- Plan 02 replaces with full validation
 - 05-01: Forward references allowed (edge before step) -- validation deferred entirely to build() time
+- 05-02: Disconnected check uses node_map.len() (unique steps) not self.steps.len() -- prevents false errors with duplicates
+- 05-02: Error collection runs all 5 checks (empty returns immediately, rest always run)
+- 05-02: Separate reported_duplicates HashSet avoids conflating seen/reported tracking state
 
 ### Pending Todos
 
@@ -97,5 +100,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-10
-Stopped at: Completed 05-01-PLAN.md (WorkflowBuilder struct and builder methods)
+Stopped at: Completed 05-02-PLAN.md (build() validation and comprehensive tests -- Phase 5 complete)
 Resume file: None
