@@ -12,18 +12,27 @@ Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abst
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] Model async trait with chat completion accepting messages and optional tool definitions (MOD-01)
+- [x] OpenAI provider implements Model trait using raw HTTP (MOD-02)
+- [x] Model trait supports returning tool call requests from LLM response (MOD-03)
+- [x] OpenAI provider handles API key configuration and endpoint construction (MOD-04)
+- [x] Tool trait with name, description, JSON schema, and execute method (TOOL-01)
+- [x] LLM step includes tool definitions sent as function declarations (TOOL-02)
+- [x] Framework dispatches tool calls and returns results to caller (TOOL-03)
+- [x] Example tools demonstrate the tool definition pattern (TOOL-04)
+- [x] DAG workflows validated for cycles and missing dependencies (WF-01)
+- [x] Workflow executor runs steps in topological order (WF-02)
+- [x] LLM and Transform step types (WF-03)
+- [x] Data flows between steps via StepInput (WF-04)
+- [x] Fluent builder pattern API (WF-05)
+- [x] Build-time validation for cycles and undefined steps (WF-06)
+- [x] Structured error types with thiserror (QLT-01)
+- [x] Errors distinguish framework vs runtime (QLT-02)
+- [x] Working example programs for all major concepts (QLT-03)
 
 ### Active
 
-- [ ] Multi-model support with OpenAI and Gemini backends
-- [ ] DAG-based workflow engine that executes steps in dependency order with parallel branches
-- [ ] Builder pattern API for defining workflows (steps, edges, data flow)
-- [ ] LLM steps that can invoke tools in a single pass (no looping)
-- [ ] Tool definition system — developers can define tools the LLM can call
-- [ ] Data flow between steps — output of one step feeds as input to dependents
-- [ ] Working example programs that demonstrate all major concepts
-- [ ] Clear, readable code that prioritizes understanding over abstraction
+(None — next milestone will define new requirements)
 
 ### Out of Scope
 
@@ -39,8 +48,10 @@ Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abst
 - Educational project: code clarity and readability are first-class concerns
 - Target audience knows Rust but may be new to LLM application patterns
 - "From scratch" means building the core abstractions (model trait, tool dispatch, workflow executor) directly, not wrapping another framework
-- OpenAI and Gemini have different API shapes for tool calling — the model abstraction layer needs to normalize this
-- DAG execution requires topological sorting and tracking step readiness
+- v1 ships with OpenAI as the sole provider; Gemini deferred to v2
+- DAG execution uses petgraph for topological sorting and cycle detection
+- async-trait chosen for dyn-safe Model trait (Box<dyn Model> compiles)
+- All types use owned types (String, Vec) for async boundary safety
 
 ## Constraints
 
@@ -53,10 +64,12 @@ Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abst
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| DAG over sequential pipelines | Parallel branches show more interesting patterns | — Pending |
-| Single-shot tool calling (no loops) | Keeps scope minimal, focuses on the mechanism | — Pending |
-| Builder pattern API | Idiomatic Rust, readable in examples | — Pending |
-| OpenAI + Gemini as initial backends | Two different API shapes forces a clean abstraction | — Pending |
+| DAG over sequential pipelines | Parallel branches show more interesting patterns | v1.0: Implemented with petgraph, topological ordering verified |
+| Single-shot tool calling (no loops) | Keeps scope minimal, focuses on the mechanism | v1.0: dispatch/dispatch_all with fail-fast, works as designed |
+| Builder pattern API | Idiomatic Rust, readable in examples | v1.0: Consuming-self builder with comprehensive validation |
+| OpenAI as sole v1 backend | Ship faster, Gemini deferred to v2 | v1.0: Full HTTP provider with structured errors |
+| async-trait for Model trait | dyn-safe dispatch, Box<dyn Model> at runtime | v1.0: Works, Send+Sync supertraits for task sharing |
+| Owned types at async boundaries | String/Vec not &str for safe async Send | v1.0: Clean async story, no lifetime issues |
 
 ---
-*Last updated: 2026-02-10 after initialization*
+*Last updated: 2026-02-11 after v1.0 milestone completion*

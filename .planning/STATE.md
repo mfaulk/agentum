@@ -2,23 +2,26 @@
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-10)
+See: .planning/PROJECT.md (updated 2026-02-11)
 
 **Core value:** Clearly demonstrate how agentic AI patterns (workflows, tool calling, model abstraction) are built, so Rust developers can read the code and understand every layer.
-**Current focus:** Phase 6 - Integration Examples -- COMPLETE
+**Current focus:** Post v1.0 — milestone complete, awaiting next milestone definition
 
 ## Current Position
 
-Phase: 6 of 6 (Integration Examples) -- COMPLETE
-Plan: 1 of 1 in current phase (06-01 complete)
-Status: All phases complete. Project finished.
-Last activity: 2026-02-11 -- Completed 06-01-PLAN.md
+Milestone: v1.0 — COMPLETE (shipped 2026-02-11)
+Next milestone: Not yet defined
+Status: Between milestones. Run /gsd:new-milestone to start v2.
 
-Progress: [████████████] 100%
+## Completed Milestones
+
+- **v1.0** (2026-02-11): 6 phases, 11 plans, 17/17 requirements, 32 tests
+  - See: .planning/MILESTONES.md
+  - Archive: .planning/milestones/v1.0-ROADMAP.md, v1.0-REQUIREMENTS.md, v1.0-MILESTONE-AUDIT.md
 
 ## Performance Metrics
 
-**Velocity:**
+**v1.0 Velocity:**
 - Total plans completed: 11
 - Average duration: 2min
 - Total execution time: 0.35 hours
@@ -34,76 +37,30 @@ Progress: [████████████] 100%
 | 05-builder-api | 2 | 4min | 2min |
 | 06-examples | 1 | 3min | 3min |
 
-**Recent Trend:**
-- Last 5 plans: 04-01 (2min), 04-02 (2min), 05-01 (2min), 05-02 (2min), 06-01 (3min)
-- Trend: consistent
-
-*Updated after each plan completion*
-
 ## Accumulated Context
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
+Key architectural decisions from v1.0 (preserved for v2 continuity):
 
-- Roadmap: 6 phases following Rust dependency order (leaf abstractions first, integration last)
-- Roadmap: Gemini provider deferred to v2; OpenAI is the sole v1 provider
-- Research: Prefer enum dispatch or async-trait for Model trait object safety (decide in Phase 1)
-- Research: Use owned types at async boundaries from day one (String, Arc, not &str)
-- 01-01: Role gets Serialize/Deserialize (wire format type); Message does not (internal type)
-- 01-01: ModelResponse is enum (Text/ToolCalls) encoding API mutual exclusivity at type level
-- 01-01: All types use owned types (String, Vec) for async boundary safety
-- 01-01: reqwest uses default-features = false; Phase 2 will finalize TLS flags
-- 01-02: Single flat Error enum with comment grouping (runtime/tool/framework) rather than nested enums
-- 01-02: async_trait chosen for dyn-safe Model trait (Box<dyn Model> compiles)
-- 01-02: Separate chat() and chat_with_tools() methods rather than optional tools parameter
-- 01-02: Send + Sync supertraits on Model for async task sharing
-- 02-01: reqwest 0.13 uses 'rustls' feature (not 'rustls-tls') for TLS backend
-- 02-01: All wire-format types are pub(crate) -- not part of public API
-- 02-01: ChatMessage uses serde tag='role' for internally tagged enum serialization
-- 02-01: Optional request fields use skip_serializing_if for absent-not-null behavior
-- 02-02: send_request checks HTTP status before consuming body (not error_for_status) for structured error messages
-- 02-02: Conversion functions are module-level private fns, not methods on types
-- 02-02: parse_response prioritizes tool_calls over content when both present
-- 03-01: Separate methods (name, description, parameters) on Tool trait rather than metadata struct
-- 03-01: Default definition() method assembles ToolDefinition from individual methods
-- 03-01: ToolRegistry owns tools via Box<dyn Tool> for simple lifetime story
-- 03-01: register() returns Error::DuplicateTool instead of silently overwriting
-- 03-02: dispatch wraps any tool.execute error in ToolExecutionFailed with tool name for context
-- 03-02: Arguments parsed via serde_json::from_str with auto-conversion to Error::ResponseParse
-- 03-02: dispatch_all uses simple loop with ? for fail-fast (not collect/try_join)
-- 04-01: Manual Debug impl for Workflow (contains trait objects that can't derive Debug)
-- 04-01: Edge convention: (from, to) means "from must complete before to"
-- 04-01: Workflow::new validates fully at construction -- no invalid Workflow can exist
-- 04-01: StepInput/StepOutput are type aliases (HashMap<String, Value> and Value) for uniform JSON data flow
-- 04-02: execute() is a method on Workflow (impl block in executor.rs) for discoverability
-- 04-02: execute_llm_step is a private free function, not a method, to keep Workflow's public API clean
-- 04-02: MockModel in test module returns fixed text responses for deterministic integration testing
-- 05-01: Consuming self (move semantics) for all builder methods -- consistent with ModelOptions pattern, required by non-Clone Step
-- 05-01: BuilderErrors wrapper struct rather than raw Vec<BuilderError> -- enables Display and std::error::Error
-- 05-01: Stub build() delegates to Workflow::new with error translation -- Plan 02 replaces with full validation
-- 05-01: Forward references allowed (edge before step) -- validation deferred entirely to build() time
-- 05-02: Disconnected check uses node_map.len() (unique steps) not self.steps.len() -- prevents false errors with duplicates
-- 05-02: Error collection runs all 5 checks (empty returns immediately, rest always run)
-- 05-02: Separate reported_duplicates HashSet avoids conflating seen/reported tracking state
-- 06-01: Manual API key check with helpful error messages instead of from_env() for example-quality UX
-- 06-01: gpt-4o-mini model for all examples to minimize API costs
-- 06-01: Self-contained tool definitions in tool_calling.rs (no shared modules)
-- 06-01: Summarize-then-translate pipeline as realistic workflow use case
+- async-trait for dyn-safe Model trait (Box<dyn Model> compiles)
+- Owned types (String, Vec) at async boundaries
+- Single flat Error enum with comment grouping (runtime/tool/framework)
+- Separate chat() and chat_with_tools() methods on Model trait
+- petgraph for DAG validation and topological ordering
+- Consuming-self builder pattern (move semantics)
+- fail-fast dispatch_all (loop with ?, not collect/try_join)
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-- ~~Verify current crate versions (tokio, reqwest, serde, petgraph, async-trait) during Phase 1 setup~~ RESOLVED: All versions verified in 01-01
-- ~~Verify OpenAI API tool calling format against current docs during Phase 2~~ RESOLVED: Wire-format types defined in 02-01 with ToolCallWire/FunctionCallWire matching current OpenAI format
-- ~~Decide enum dispatch vs async-trait for Model during Phase 1 planning (01-02)~~ RESOLVED: async-trait chosen in 01-02
+None.
 
 ## Session Continuity
 
 Last session: 2026-02-11
-Stopped at: Completed 06-01-PLAN.md (all three integration examples -- Phase 6 and project complete)
+Stopped at: v1.0 milestone completed and archived
 Resume file: None
