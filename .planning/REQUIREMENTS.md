@@ -17,7 +17,7 @@
 - [x] **TOOL-01**: Library defines a `Tool` trait with name, description, JSON schema for parameters, and an execute method
 - [x] **TOOL-02**: LLM step can include tool definitions that are sent to the model as function declarations
 - [x] **TOOL-03**: When the model returns a tool call, the framework executes the matching tool and returns the result to the caller
-- [ ] **TOOL-04**: Library includes example tools (e.g. calculator, mock weather) that demonstrate the tool definition pattern
+- [x] **TOOL-04**: Library includes example tools (e.g. calculator, mock weather) that demonstrate the tool definition pattern
 
 ### Workflow Engine
 
@@ -32,7 +32,7 @@
 
 - [x] **QLT-01**: Library uses structured error types (thiserror) with clear context for each failure mode
 - [x] **QLT-02**: Errors distinguish between framework errors (bad workflow definition) and runtime errors (API failure, tool error)
-- [ ] **QLT-03**: Working example programs demonstrate: single LLM call, LLM with tools, multi-step workflow, workflow with data flow
+- [x] **QLT-03**: Working example programs demonstrate: single LLM call, LLM with tools, multi-step workflow, workflow with data flow
 
 ## v2 Requirements
 
@@ -71,7 +71,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | TOOL-01 | Phase 3 | Complete |
 | TOOL-02 | Phase 3 | Complete |
 | TOOL-03 | Phase 3 | Complete |
-| TOOL-04 | Phase 6 | Pending |
+| TOOL-04 | Phase 6 | Complete |
 | WF-01 | Phase 4 | Complete |
 | WF-02 | Phase 4 | Complete |
 | WF-03 | Phase 4 | Complete |
@@ -80,7 +80,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WF-06 | Phase 5 | Complete |
 | QLT-01 | Phase 1 | Complete |
 | QLT-02 | Phase 1 | Complete |
-| QLT-03 | Phase 6 | Pending |
+| QLT-03 | Phase 6 | Complete |
 
 **Coverage:**
 - v1 requirements: 17 total

@@ -17,7 +17,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 3: Tool System** - Define the Tool trait, integrate tool declarations with LLM calls, and dispatch tool execution
 - [x] **Phase 4: Workflow Engine** - Build the DAG executor with topological ordering, step types, and data flow
 - [x] **Phase 5: Builder API** - Add fluent workflow construction with build-time validation
-- [ ] **Phase 6: Examples** - Create working example programs that demonstrate all major concepts
+- [x] **Phase 6: Examples** - Create working example programs that demonstrate all major concepts
 
 ## Phase Details
 
@@ -109,7 +109,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md — Three standalone example programs: simple_chat (single LLM call), tool_calling (Tool trait + dispatch + both response paths), workflow (summarize-then-translate pipeline with data flow)
+- [x] 06-01-PLAN.md — Three standalone example programs: simple_chat (single LLM call), tool_calling (Tool trait + dispatch + both response paths), workflow (summarize-then-translate pipeline with data flow)
 
 ## Progress
 
@@ -123,4 +123,4 @@ Phases execute in numeric order: 1 -> 2 -> 3 -> 4 -> 5 -> 6
 | 3. Tool System | 2/2 | Complete | 2026-02-10 |
 | 4. Workflow Engine | 2/2 | Complete | 2026-02-10 |
 | 5. Builder API | 2/2 | Complete | 2026-02-10 |
-| 6. Examples | 0/1 | Not started | - |
+| 6. Examples | 1/1 | Complete | 2026-02-11 |
