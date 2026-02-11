@@ -215,15 +215,13 @@ impl WorkflowBuilder {
 
         // 2. Duplicate step detection.
         let mut seen_names: HashSet<&str> = HashSet::new();
-        let mut unique_names: HashSet<&str> = HashSet::new();
+        let mut reported_duplicates: HashSet<&str> = HashSet::new();
         for (name, _) in &self.steps {
             if !seen_names.insert(name.as_str()) {
                 // Only report each duplicate name once.
-                if unique_names.insert(name.as_str()) {
+                if reported_duplicates.insert(name.as_str()) {
                     errors.push(BuilderError::DuplicateStep(name.clone()));
                 }
-            } else {
-                unique_names.insert(name.as_str());
             }
         }
 
@@ -279,7 +277,9 @@ impl WorkflowBuilder {
         }
 
         // 6. Disconnected step detection (single-step workflows are exempt).
-        if self.steps.len() > 1 {
+        // Use the count of unique step names (graph nodes), not self.steps.len(),
+        // because duplicates inflate the raw count.
+        if node_map.len() > 1 {
             for (name, idx) in &node_map {
                 let has_incoming = graph
                     .neighbors_directed(*idx, Direction::Incoming)
@@ -312,5 +312,218 @@ impl WorkflowBuilder {
 impl Default for WorkflowBuilder {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::BuilderError;
+    use serde_json::json;
+
+    /// Create a dummy Transform step for testing.
+    fn dummy_transform() -> Step {
+        Step::Transform {
+            transform: Box::new(|_| Ok(serde_json::json!(null))),
+        }
+    }
+
+    // -----------------------------------------------------------------------
+    // Valid construction tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_builder_single_step() {
+        let wf = Workflow::builder()
+            .step("only", dummy_transform())
+            .build()
+            .expect("single step should build successfully");
+
+        assert_eq!(wf.execution_order().len(), 1);
+        assert_eq!(wf.execution_order()[0], "only");
+    }
+
+    #[test]
+    fn test_builder_linear_chain() {
+        let wf = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("B", dummy_transform())
+            .step("C", dummy_transform())
+            .chain(&["A", "B", "C"])
+            .build()
+            .expect("linear chain should build successfully");
+
+        assert_eq!(wf.execution_order(), &["A", "B", "C"]);
+    }
+
+    #[test]
+    fn test_builder_explicit_edges() {
+        let wf = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("B", dummy_transform())
+            .edge("A", "B")
+            .build()
+            .expect("explicit edges should build successfully");
+
+        assert_eq!(wf.execution_order(), &["A", "B"]);
+    }
+
+    #[test]
+    fn test_builder_diamond() {
+        let wf = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("B", dummy_transform())
+            .step("C", dummy_transform())
+            .step("D", dummy_transform())
+            .edge("A", "B")
+            .edge("A", "C")
+            .edge("B", "D")
+            .edge("C", "D")
+            .build()
+            .expect("diamond should build successfully");
+
+        let order = wf.execution_order();
+        assert_eq!(order[0], "A", "A must be first");
+        assert_eq!(order[3], "D", "D must be last");
+    }
+
+    #[test]
+    fn test_builder_typed_helpers() {
+        let wf = Workflow::builder()
+            .transform_step("step1", |_| Ok(json!({"msg": "hello"})))
+            .transform_step("step2", |inputs| {
+                Ok(json!({"echo": inputs["step1"]["msg"]}))
+            })
+            .edge("step1", "step2")
+            .build()
+            .expect("typed helpers should build successfully");
+
+        assert_eq!(wf.execution_order(), &["step1", "step2"]);
+    }
+
+    // -----------------------------------------------------------------------
+    // Error detection tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_builder_empty_workflow() {
+        let result = Workflow::builder().build();
+        let err = result.unwrap_err();
+        assert_eq!(err.errors.len(), 1);
+        assert!(
+            matches!(err.errors[0], BuilderError::EmptyWorkflow),
+            "expected EmptyWorkflow, got: {:?}",
+            err.errors[0]
+        );
+    }
+
+    #[test]
+    fn test_builder_duplicate_step() {
+        let result = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("A", dummy_transform())
+            .build();
+
+        let err = result.unwrap_err();
+        assert!(
+            err.errors.iter().any(|e| matches!(e, BuilderError::DuplicateStep(name) if name == "A")),
+            "expected DuplicateStep(A), got: {:?}",
+            err.errors
+        );
+    }
+
+    #[test]
+    fn test_builder_missing_step_in_edge() {
+        let result = Workflow::builder()
+            .step("A", dummy_transform())
+            .edge("A", "nonexistent")
+            .build();
+
+        let err = result.unwrap_err();
+        assert!(
+            err.errors.iter().any(|e| matches!(
+                e,
+                BuilderError::MissingStep { edge_endpoint } if edge_endpoint == "nonexistent"
+            )),
+            "expected MissingStep for 'nonexistent', got: {:?}",
+            err.errors
+        );
+    }
+
+    #[test]
+    fn test_builder_cycle_detection() {
+        let result = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("B", dummy_transform())
+            .step("C", dummy_transform())
+            .edge("A", "B")
+            .edge("B", "C")
+            .edge("C", "A")
+            .build();
+
+        let err = result.unwrap_err();
+        assert!(
+            err.errors.iter().any(|e| matches!(e, BuilderError::CycleDetected(_))),
+            "expected CycleDetected, got: {:?}",
+            err.errors
+        );
+    }
+
+    #[test]
+    fn test_builder_disconnected_step() {
+        let result = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("B", dummy_transform())
+            .step("orphan", dummy_transform())
+            .edge("A", "B")
+            .build();
+
+        let err = result.unwrap_err();
+        assert!(
+            err.errors.iter().any(|e| matches!(
+                e,
+                BuilderError::DisconnectedStep(name) if name == "orphan"
+            )),
+            "expected DisconnectedStep(orphan), got: {:?}",
+            err.errors
+        );
+    }
+
+    #[test]
+    fn test_builder_single_step_not_disconnected() {
+        // Single-step workflows are exempt from disconnected step detection.
+        let wf = Workflow::builder()
+            .step("alone", dummy_transform())
+            .build()
+            .expect("single step should not be flagged as disconnected");
+
+        assert_eq!(wf.execution_order().len(), 1);
+    }
+
+    // -----------------------------------------------------------------------
+    // Error collection tests
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn test_builder_collects_multiple_errors() {
+        // Both a duplicate step AND a missing step reference.
+        let result = Workflow::builder()
+            .step("A", dummy_transform())
+            .step("A", dummy_transform()) // duplicate
+            .edge("A", "ghost")           // missing step
+            .build();
+
+        let err = result.unwrap_err();
+        assert!(
+            err.errors.len() >= 2,
+            "expected at least 2 errors (got {}): {:?}",
+            err.errors.len(),
+            err.errors
+        );
+
+        let has_duplicate = err.errors.iter().any(|e| matches!(e, BuilderError::DuplicateStep(_)));
+        let has_missing = err.errors.iter().any(|e| matches!(e, BuilderError::MissingStep { .. }));
+        assert!(has_duplicate, "expected a DuplicateStep error");
+        assert!(has_missing, "expected a MissingStep error");
     }
 }
