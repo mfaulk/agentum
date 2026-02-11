@@ -32,13 +32,13 @@ use petgraph::algo::toposort;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::Direction;
 
+use super::step::{Step, StepInput};
+use super::workflow::Workflow;
 use crate::error::{BuilderError, BuilderErrors, Result};
 use crate::model::Model;
 use crate::tool::ToolRegistry;
 use crate::types::ModelOptions;
 use serde_json::Value;
-use super::step::{Step, StepInput};
-use super::workflow::Workflow;
 
 /// A fluent builder for constructing [`Workflow`] instances.
 ///
@@ -106,9 +106,12 @@ impl WorkflowBuilder {
         name: impl Into<String>,
         transform: impl Fn(&StepInput) -> Result<Value> + Send + Sync + 'static,
     ) -> Self {
-        self.step(name, Step::Transform {
-            transform: Box::new(transform),
-        })
+        self.step(
+            name,
+            Step::Transform {
+                transform: Box::new(transform),
+            },
+        )
     }
 
     /// Add a [`Step::Llm`] with default options and no tools.
@@ -124,12 +127,15 @@ impl WorkflowBuilder {
         model: Box<dyn Model>,
         prompt_builder: impl Fn(&StepInput) -> String + Send + Sync + 'static,
     ) -> Self {
-        self.step(name, Step::Llm {
-            model,
-            prompt_builder: Box::new(prompt_builder),
-            tools: None,
-            options: ModelOptions::default(),
-        })
+        self.step(
+            name,
+            Step::Llm {
+                model,
+                prompt_builder: Box::new(prompt_builder),
+                tools: None,
+                options: ModelOptions::default(),
+            },
+        )
     }
 
     /// Add a [`Step::Llm`] with tools and custom options.
@@ -144,12 +150,15 @@ impl WorkflowBuilder {
         tools: ToolRegistry,
         options: ModelOptions,
     ) -> Self {
-        self.step(name, Step::Llm {
-            model,
-            prompt_builder: Box::new(prompt_builder),
-            tools: Some(tools),
-            options,
-        })
+        self.step(
+            name,
+            Step::Llm {
+                model,
+                prompt_builder: Box::new(prompt_builder),
+                tools: Some(tools),
+                options,
+            },
+        )
     }
 
     /// Add a dependency edge: `from` must complete before `to`.
@@ -178,7 +187,8 @@ impl WorkflowBuilder {
     /// ```
     pub fn chain(mut self, steps: &[&str]) -> Self {
         for window in steps.windows(2) {
-            self.edges.push((window[0].to_string(), window[1].to_string()));
+            self.edges
+                .push((window[0].to_string(), window[1].to_string()));
         }
         self
     }
@@ -271,9 +281,7 @@ impl WorkflowBuilder {
 
         // 5. Cycle detection via petgraph toposort.
         if let Err(cycle) = toposort(&graph, None) {
-            errors.push(BuilderError::CycleDetected(
-                graph[cycle.node_id()].clone(),
-            ));
+            errors.push(BuilderError::CycleDetected(graph[cycle.node_id()].clone()));
         }
 
         // 6. Disconnected step detection (single-step workflows are exempt).
@@ -281,14 +289,8 @@ impl WorkflowBuilder {
         // because duplicates inflate the raw count.
         if node_map.len() > 1 {
             for (name, idx) in &node_map {
-                let has_incoming = graph
-                    .neighbors_directed(*idx, Direction::Incoming)
-                    .count()
-                    > 0;
-                let has_outgoing = graph
-                    .neighbors_directed(*idx, Direction::Outgoing)
-                    .count()
-                    > 0;
+                let has_incoming = graph.neighbors_directed(*idx, Direction::Incoming).count() > 0;
+                let has_outgoing = graph.neighbors_directed(*idx, Direction::Outgoing).count() > 0;
 
                 if !has_incoming && !has_outgoing {
                     errors.push(BuilderError::DisconnectedStep(name.clone()));
@@ -426,7 +428,9 @@ mod tests {
 
         let err = result.unwrap_err();
         assert!(
-            err.errors.iter().any(|e| matches!(e, BuilderError::DuplicateStep(name) if name == "A")),
+            err.errors
+                .iter()
+                .any(|e| matches!(e, BuilderError::DuplicateStep(name) if name == "A")),
             "expected DuplicateStep(A), got: {:?}",
             err.errors
         );
@@ -463,7 +467,9 @@ mod tests {
 
         let err = result.unwrap_err();
         assert!(
-            err.errors.iter().any(|e| matches!(e, BuilderError::CycleDetected(_))),
+            err.errors
+                .iter()
+                .any(|e| matches!(e, BuilderError::CycleDetected(_))),
             "expected CycleDetected, got: {:?}",
             err.errors
         );
@@ -510,7 +516,7 @@ mod tests {
         let result = Workflow::builder()
             .step("A", dummy_transform())
             .step("A", dummy_transform()) // duplicate
-            .edge("A", "ghost")           // missing step
+            .edge("A", "ghost") // missing step
             .build();
 
         let err = result.unwrap_err();
@@ -521,8 +527,14 @@ mod tests {
             err.errors
         );
 
-        let has_duplicate = err.errors.iter().any(|e| matches!(e, BuilderError::DuplicateStep(_)));
-        let has_missing = err.errors.iter().any(|e| matches!(e, BuilderError::MissingStep { .. }));
+        let has_duplicate = err
+            .errors
+            .iter()
+            .any(|e| matches!(e, BuilderError::DuplicateStep(_)));
+        let has_missing = err
+            .errors
+            .iter()
+            .any(|e| matches!(e, BuilderError::MissingStep { .. }));
         assert!(has_duplicate, "expected a DuplicateStep error");
         assert!(has_missing, "expected a MissingStep error");
     }

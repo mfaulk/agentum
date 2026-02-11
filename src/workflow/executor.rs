@@ -112,9 +112,7 @@ async fn execute_llm_step(
         ModelResponse::ToolCalls(calls) => {
             // The model wants to call tools -- dispatch them via the registry.
             let registry = tools.as_ref().ok_or_else(|| {
-                Error::InvalidWorkflow(
-                    "model returned tool calls but no tools configured".into(),
-                )
+                Error::InvalidWorkflow("model returned tool calls but no tools configured".into())
             })?;
             let results = registry.dispatch_all(&calls).await?;
             let result_values: Vec<Value> = results

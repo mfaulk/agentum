@@ -62,10 +62,8 @@ async fn main() {
     // 2. Create two provider instances -- one for each LLM step.
     //    Each llm_step takes ownership of a Box<dyn Model>, so we need
     //    separate instances. Both use gpt-4o-mini for cost efficiency.
-    let summarizer: Box<dyn Model> =
-        Box::new(OpenAiProvider::new(api_key.clone(), "gpt-4o-mini"));
-    let translator: Box<dyn Model> =
-        Box::new(OpenAiProvider::new(api_key, "gpt-4o-mini"));
+    let summarizer: Box<dyn Model> = Box::new(OpenAiProvider::new(api_key.clone(), "gpt-4o-mini"));
+    let translator: Box<dyn Model> = Box::new(OpenAiProvider::new(api_key, "gpt-4o-mini"));
 
     // 3. Build the workflow using the WorkflowBuilder API.
     //
@@ -85,9 +83,7 @@ async fn main() {
     let workflow = Workflow::builder()
         // Step 1: Inject the article text into the data flow.
         // Transform steps are useful for preparing data before LLM calls.
-        .transform_step("inject_article", |_inputs| {
-            Ok(json!({ "text": ARTICLE }))
-        })
+        .transform_step("inject_article", |_inputs| Ok(json!({ "text": ARTICLE })))
         // Step 2: Summarize the article.
         // The prompt_builder closure receives upstream outputs via StepInput.
         // Here, it reads the article text injected by the previous step.
@@ -133,7 +129,10 @@ async fn main() {
     let workflow = match workflow {
         Ok(wf) => wf,
         Err(errors) => {
-            eprintln!("Workflow build failed with {} error(s):", errors.errors.len());
+            eprintln!(
+                "Workflow build failed with {} error(s):",
+                errors.errors.len()
+            );
             for err in &errors.errors {
                 eprintln!("  - {err}");
             }
@@ -145,7 +144,10 @@ async fn main() {
     //    The executor runs steps in topological order. Each step receives
     //    the outputs of its upstream dependencies as a StepInput HashMap.
     //    The result is a HashMap<String, Value> containing every step's output.
-    println!("Executing workflow ({} steps)...", workflow.execution_order().len());
+    println!(
+        "Executing workflow ({} steps)...",
+        workflow.execution_order().len()
+    );
     println!();
 
     let outputs = match workflow.execute().await {

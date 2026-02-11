@@ -67,19 +67,10 @@ impl ModelResponse {
 ///     .with_temperature(0.7)
 ///     .with_max_tokens(1024);
 /// ```
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct ModelOptions {
     pub temperature: Option<f64>,
     pub max_tokens: Option<u32>,
-}
-
-impl Default for ModelOptions {
-    fn default() -> Self {
-        Self {
-            temperature: None,
-            max_tokens: None,
-        }
-    }
 }
 
 impl ModelOptions {

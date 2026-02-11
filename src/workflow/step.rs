@@ -44,6 +44,7 @@ pub enum Step {
     /// A pure data transformation step.
     Transform {
         /// The transformation function: takes upstream outputs, returns a JSON value.
+        #[allow(clippy::type_complexity)]
         transform: Box<dyn Fn(&StepInput) -> Result<Value> + Send + Sync>,
     },
 }

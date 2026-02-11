@@ -194,10 +194,13 @@ impl ToolRegistry {
 
         // 3. Execute the tool, wrapping any error in ToolExecutionFailed
         //    to preserve the tool name for diagnostic context.
-        let result = tool.execute(args).await.map_err(|e| Error::ToolExecutionFailed {
-            name: tool_call.name.clone(),
-            message: e.to_string(),
-        })?;
+        let result = tool
+            .execute(args)
+            .await
+            .map_err(|e| Error::ToolExecutionFailed {
+                name: tool_call.name.clone(),
+                message: e.to_string(),
+            })?;
 
         // 4. Build and return the tool result message.
         Ok(Message::tool_result(
@@ -390,9 +393,7 @@ mod tests {
         };
 
         let err = registry.dispatch(&tool_call).await.unwrap_err();
-        assert!(
-            matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing")
-        );
+        assert!(matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing"));
     }
 
     #[tokio::test]
@@ -443,8 +444,6 @@ mod tests {
         ];
 
         let err = registry.dispatch_all(&tool_calls).await.unwrap_err();
-        assert!(
-            matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing")
-        );
+        assert!(matches!(err, Error::ToolExecutionFailed { ref name, .. } if name == "failing"));
     }
 }

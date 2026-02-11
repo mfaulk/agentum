@@ -89,7 +89,10 @@ async fn main() {
             // This branch won't be reached when using chat() without tools,
             // but the match must be exhaustive. If it somehow occurs, we
             // print a diagnostic message.
-            println!("Unexpected tool calls received ({} calls)", tool_calls.len());
+            println!(
+                "Unexpected tool calls received ({} calls)",
+                tool_calls.len()
+            );
             println!("This should not happen when calling chat() without tools.");
         }
     }

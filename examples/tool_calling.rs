@@ -19,10 +19,10 @@
 //!
 //! Requires the `OPENAI_API_KEY` environment variable to be set.
 
+use agentic_framework::error::Result;
 use agentic_framework::{
     Message, Model, ModelOptions, ModelResponse, OpenAiProvider, Tool, ToolRegistry,
 };
-use agentic_framework::error::Result;
 use async_trait::async_trait;
 use serde_json::json;
 
@@ -189,9 +189,7 @@ async fn main() {
             "You are a helpful assistant with access to a calculator and weather tools. \
              Use the tools when appropriate to answer questions accurately.",
         ),
-        Message::user(
-            "What is 42 multiplied by 17? Also, what is the weather like in Paris?",
-        ),
+        Message::user("What is 42 multiplied by 17? Also, what is the weather like in Paris?"),
     ];
 
     let options = ModelOptions::new()
@@ -201,7 +199,10 @@ async fn main() {
     // 5. Send the message with tool definitions.
     //    The definitions() method produces the Vec<ToolDefinition> that the
     //    model needs to know what tools are available and how to call them.
-    println!("Sending message with {} tool definitions...", registry.definitions().len());
+    println!(
+        "Sending message with {} tool definitions...",
+        registry.definitions().len()
+    );
     println!();
 
     let response = match provider
@@ -236,12 +237,7 @@ async fn main() {
             println!();
 
             for (i, call) in tool_calls.iter().enumerate() {
-                println!(
-                    "  Tool call {}: {}({})",
-                    i + 1,
-                    call.name,
-                    call.arguments
-                );
+                println!("  Tool call {}: {}({})", i + 1, call.name, call.arguments);
             }
             println!();
 

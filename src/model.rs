@@ -31,11 +31,7 @@ pub trait Model: Send + Sync {
     ///
     /// # Returns
     /// A `ModelResponse` which is either text content or tool call requests.
-    async fn chat(
-        &self,
-        messages: &[Message],
-        options: &ModelOptions,
-    ) -> Result<ModelResponse>;
+    async fn chat(&self, messages: &[Message], options: &ModelOptions) -> Result<ModelResponse>;
 
     /// Send a conversation with tool definitions available for the model to call.
     ///

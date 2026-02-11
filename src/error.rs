@@ -3,7 +3,6 @@ use thiserror::Error;
 #[derive(Debug, Error)]
 pub enum Error {
     // --- Runtime errors (things that go wrong at call time) ---
-
     /// HTTP request to the LLM API failed (network error, timeout, DNS failure).
     #[error("API request failed: {0}")]
     Api(#[from] reqwest::Error),
@@ -21,7 +20,6 @@ pub enum Error {
     UnexpectedResponse(String),
 
     // --- Tool errors ---
-
     /// A tool requested by the model was not registered.
     #[error("tool not found: {0}")]
     ToolNotFound(String),
@@ -35,7 +33,6 @@ pub enum Error {
     DuplicateTool(String),
 
     // --- Framework errors (structural/configuration problems) ---
-
     /// The workflow definition is structurally invalid (e.g., contains cycles).
     #[error("invalid workflow: {0}")]
     InvalidWorkflow(String),

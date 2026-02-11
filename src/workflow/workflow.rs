@@ -11,8 +11,8 @@ use petgraph::algo::toposort;
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::Direction;
 
-use crate::error::{Error, Result};
 use super::step::Step;
+use crate::error::{Error, Result};
 
 /// A validated workflow DAG with pre-computed execution order.
 ///
@@ -82,14 +82,18 @@ impl Workflow {
 
         // 2. Add edges, validating that both endpoints exist.
         for (from, to) in edges {
-            let from_idx = node_indices.get(&from).ok_or_else(|| Error::MissingDependency {
-                step: to.clone(),
-                dependency: from.clone(),
-            })?;
-            let to_idx = node_indices.get(&to).ok_or_else(|| Error::MissingDependency {
-                step: from.clone(),
-                dependency: to.clone(),
-            })?;
+            let from_idx = node_indices
+                .get(&from)
+                .ok_or_else(|| Error::MissingDependency {
+                    step: to.clone(),
+                    dependency: from.clone(),
+                })?;
+            let to_idx = node_indices
+                .get(&to)
+                .ok_or_else(|| Error::MissingDependency {
+                    step: from.clone(),
+                    dependency: to.clone(),
+                })?;
             graph.add_edge(*from_idx, *to_idx, ());
         }
 
@@ -100,10 +104,7 @@ impl Workflow {
         })?;
 
         // 4. Convert node indices to step names for the execution order.
-        let execution_order: Vec<String> = sorted
-            .iter()
-            .map(|idx| graph[*idx].clone())
-            .collect();
+        let execution_order: Vec<String> = sorted.iter().map(|idx| graph[*idx].clone()).collect();
 
         Ok(Self {
             graph,
@@ -227,7 +228,10 @@ mod tests {
         let err = result.unwrap_err();
         match &err {
             Error::InvalidWorkflow(msg) => {
-                assert!(msg.contains("cycle detected"), "expected cycle message, got: {msg}");
+                assert!(
+                    msg.contains("cycle detected"),
+                    "expected cycle message, got: {msg}"
+                );
             }
             other => panic!("expected InvalidWorkflow, got: {other:?}"),
         }
@@ -236,10 +240,7 @@ mod tests {
     #[test]
     fn test_missing_dependency() {
         // Edge references "X" which does not exist as a step.
-        let result = Workflow::new(
-            vec![named("A"), named("B")],
-            vec![edge("X", "B")],
-        );
+        let result = Workflow::new(vec![named("A"), named("B")], vec![edge("X", "B")]);
 
         let err = result.unwrap_err();
         match &err {
@@ -253,10 +254,7 @@ mod tests {
 
     #[test]
     fn test_duplicate_step_names() {
-        let result = Workflow::new(
-            vec![named("A"), named("A")],
-            vec![],
-        );
+        let result = Workflow::new(vec![named("A"), named("A")], vec![]);
 
         let err = result.unwrap_err();
         match &err {
@@ -269,11 +267,7 @@ mod tests {
 
     #[test]
     fn test_single_step_no_edges() {
-        let wf = Workflow::new(
-            vec![named("only")],
-            vec![],
-        )
-        .unwrap();
+        let wf = Workflow::new(vec![named("only")], vec![]).unwrap();
 
         assert_eq!(wf.execution_order(), &["only"]);
         assert!(wf.step("only").is_some());

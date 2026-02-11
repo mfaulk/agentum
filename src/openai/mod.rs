@@ -80,9 +80,8 @@ impl OpenAiProvider {
     ///
     /// Returns `Error::Config` if the variable is not set.
     pub fn from_env(model: impl Into<String>) -> Result<Self> {
-        let api_key = std::env::var("OPENAI_API_KEY").map_err(|_| {
-            Error::Config("OPENAI_API_KEY environment variable not set".into())
-        })?;
+        let api_key = std::env::var("OPENAI_API_KEY")
+            .map_err(|_| Error::Config("OPENAI_API_KEY environment variable not set".into()))?;
         Ok(Self::new(api_key, model))
     }
 
@@ -223,11 +222,7 @@ fn parse_response(response: ChatCompletionResponse) -> Result<ModelResponse> {
 
 #[async_trait]
 impl Model for OpenAiProvider {
-    async fn chat(
-        &self,
-        messages: &[Message],
-        options: &ModelOptions,
-    ) -> Result<ModelResponse> {
+    async fn chat(&self, messages: &[Message], options: &ModelOptions) -> Result<ModelResponse> {
         let request = ChatCompletionRequest {
             model: self.model.clone(),
             messages: messages.iter().map(to_chat_message).collect(),
