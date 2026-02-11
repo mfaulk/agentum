@@ -25,8 +25,8 @@
 - [x] **WF-02**: Workflow executor runs steps in topological order, respecting dependency edges
 - [x] **WF-03**: Steps can be LLM calls (with optional tools) or data transformation functions
 - [x] **WF-04**: Output of a step is passed as input to its dependent steps (data flow)
-- [ ] **WF-05**: Workflows are constructed using a builder pattern API (`Workflow::builder()`)
-- [ ] **WF-06**: Builder validates the workflow at build time -- cycles and missing dependencies produce compile-time or construction-time errors
+- [x] **WF-05**: Workflows are constructed using a builder pattern API (`Workflow::builder()`)
+- [x] **WF-06**: Builder validates the workflow at build time -- cycles and missing dependencies produce compile-time or construction-time errors
 
 ### Quality
 
@@ -76,8 +76,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 | WF-02 | Phase 4 | Complete |
 | WF-03 | Phase 4 | Complete |
 | WF-04 | Phase 4 | Complete |
-| WF-05 | Phase 5 | Pending |
-| WF-06 | Phase 5 | Pending |
+| WF-05 | Phase 5 | Complete |
+| WF-06 | Phase 5 | Complete |
 | QLT-01 | Phase 1 | Complete |
 | QLT-02 | Phase 1 | Complete |
 | QLT-03 | Phase 6 | Pending |
