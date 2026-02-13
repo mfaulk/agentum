@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="agentum-banner.png" alt="Agentum" />
+</p>
+
 # Agentum
 
 Agentum is a Rust framework for building large-scale, multi-agent applications with structured orchestration, tool integration, and reliable execution.
