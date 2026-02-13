@@ -20,9 +20,7 @@
 //! Requires the `OPENAI_API_KEY` environment variable to be set.
 
 use agentum::error::Result;
-use agentum::{
-    Message, Model, ModelOptions, ModelResponse, OpenAiProvider, Tool, ToolRegistry,
-};
+use agentum::{Message, Model, ModelOptions, ModelResponse, OpenAiProvider, Tool, ToolRegistry};
 use async_trait::async_trait;
 use serde_json::json;
 
