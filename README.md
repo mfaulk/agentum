@@ -4,9 +4,9 @@
 
 # Agentum
 
-Agentum is a Rust framework for building large-scale, multi-agent applications with structured orchestration, tool integration, and reliable execution.
+Agentum enables scalable multi-agent systems by enforcing explicit dynamics on how each agent may modify the system.
 
-Agentum provides the core primitives to compose Agents, Tools, Memory, and Workflows into production-grade systems. It emphasizes explicit control over planning, state, and execution. Complex multi-agent behavior is debuggable, testable, and deterministic where it matters. Use it to build agentic services that scale from local prototypes to distributed deployments without rewriting your architecture.
+Agentum provides the core primitives to compose Agents, Tools, Memory, and Workflows into production-grade systems. It then goes farther, providing explicit control over planning, state, and execution. Complex multi-agent behavior is debuggable, testable, and deterministic where it matters. Agentum keeps large swarms productive with automated validation, triage, and replayable traces when artifacts arrive faster than humans can inspect.
 
 ## Core Concepts
 
@@ -14,9 +14,11 @@ Agentum provides the core primitives to compose Agents, Tools, Memory, and Workf
 
 **Tool** — Define tools the LLM can call by implementing the `Tool` trait with a name, description, JSON schema, and execute method. Register them in a `ToolRegistry` for lookup and dispatch.
 
-**Memory** - Memory gives agents the shared context they need to cooperate, and gives you the information you need to understand and evaluate their work.
+**Memory** - Memory gives agents the shared context they need to cooperate, and provides the information you need to understand and evaluate their work.
 
-**Workflow** — DAG-based pipelines where steps run in dependency order. Steps can be LLM calls (with optional tools) or pure data transformations. Output flows from each step to its dependents.
+**Workflow** — DAG-based pipelines where steps run in dependency order. Steps can be agentic (with optional tools) or pure data transformations. Output flows from each step to its dependents.
+
+**Churn** - Churn is the continuous, system-level flow of artifact proposals and state transitions produced by many agents. Agentum's core purpose is to makes churn safe and productive by enforcing explicit dynamics: validation, capability bounds, backpressure, convergence rules, and replayable traces. Agentum allows large swarms to move faster than human review without losing control. 
 
 ## Quick Start
 
