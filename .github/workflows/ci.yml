@@ -1,3 +1,4 @@
+# Continuous Integration
 name: CI
 
 on:
@@ -5,11 +6,13 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  # cargo fmt
   fmt:
     name: Format
     runs-on: ubuntu-latest
@@ -20,6 +23,7 @@ jobs:
           components: rustfmt
       - run: cargo fmt --check
 
+  # cargo clippy
   clippy:
     name: Clippy
     runs-on: ubuntu-latest
@@ -31,6 +35,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo clippy --all-targets -- -D warnings -A dead_code -A clippy::module_inception
 
+  # cargo test
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -40,6 +45,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - run: cargo test
 
+  # cargo build --examples
   build-examples:
     name: Build Examples
     runs-on: ubuntu-latest
