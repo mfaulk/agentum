@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Pre-commit hook that runs cargo fmt and clippy.
+# To enable, run:  git config core.hooksPath scripts
+set -e
+
+# Check formatting
+if ! cargo fmt --check > /dev/null 2>&1; then
+    echo "cargo fmt: formatting issues found. Run 'cargo fmt' to fix."
+    exit 1
+fi
+
+# Run clippy
+if ! cargo clippy --all-targets -- -D warnings 2>&1; then
+    echo "cargo clippy: warnings found. Fix them before committing."
+    exit 1
+fi

@@ -81,6 +81,7 @@ pub(crate) struct ChatFunction {
 
 /// Top-level response from `POST /v1/chat/completions`.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub(crate) struct ChatCompletionResponse {
     pub id: String,
     pub choices: Vec<Choice>,
@@ -89,6 +90,7 @@ pub(crate) struct ChatCompletionResponse {
 
 /// A single completion choice.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub(crate) struct Choice {
     pub index: u32,
     pub message: ResponseMessage,
@@ -100,6 +102,7 @@ pub(crate) struct Choice {
 /// `content` is `Option<String>` because OpenAI returns `"content": null`
 /// when the response consists entirely of tool calls.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub(crate) struct ResponseMessage {
     pub role: String,
     pub content: Option<String>,
@@ -108,6 +111,7 @@ pub(crate) struct ResponseMessage {
 
 /// Token usage statistics for the request.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub(crate) struct Usage {
     pub prompt_tokens: u32,
     pub completion_tokens: u32,
@@ -153,6 +157,7 @@ pub(crate) struct ApiErrorResponse {
 
 /// The error body inside an API error response.
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 pub(crate) struct ApiErrorBody {
     pub message: String,
     #[serde(rename = "type")]

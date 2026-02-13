@@ -8,6 +8,7 @@
 pub mod builder;
 pub mod executor;
 pub mod step;
+#[allow(clippy::module_inception)]
 pub mod workflow;
 
 pub use builder::WorkflowBuilder;
