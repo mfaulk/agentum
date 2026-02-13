@@ -6,13 +6,13 @@
 
 Agentum enables scalable multi-agent systems by enforcing explicit dynamics on how each agent may modify the system.
 
-Agentum provides the core primitives to compose Agents, Tools, Memory, and Workflows into production-grade systems. It then goes farther, providing explicit control over planning, state, and execution. Complex multi-agent behavior is debuggable, testable, and deterministic where it matters. Agentum keeps large swarms productive with automated validation, triage, and replayable traces when artifacts arrive faster than humans can inspect.
+Agentum provides the core primitives to compose Agents, Tools, Memory, and Workflows into production-grade systems. It then goes further, providing explicit control over planning, state, and execution. Complex multi-agent behavior, or **Churn**, is intelligible, testable, and deterministic where it matters. Agentum keeps large swarms productive with automated validation, triage, and replayable traces when artifacts arrive faster than humans can inspect.
 
 ## Core Concepts
 
-**Model** — An async trait (`Box<dyn Model>`) for chat completions. Swap providers at runtime without changing application code.
+**Model** — Async abstraction for chat completions. Swap providers at runtime without changing application code.
 
-**Tool** — Define tools the LLM can call by implementing the `Tool` trait with a name, description, JSON schema, and execute method. Register them in a `ToolRegistry` for lookup and dispatch.
+**Tool** — Define tools that models can call by implementing the `Tool` trait. Register them in a `ToolRegistry` for lookup and dispatch.
 
 **Memory** - Memory gives agents the shared context they need to cooperate, and provides the information you need to understand and evaluate their work.
 
