@@ -14,7 +14,7 @@ Agentum provides the core primitives to compose Agents, Tools, Memory, and Workf
 
 **Tool** — Define tools the LLM can call by implementing the `Tool` trait with a name, description, JSON schema, and execute method. Register them in a `ToolRegistry` for lookup and dispatch.
 
-**Memory** - Memory gives agents the shared context they need to cooperate, and gives you the information you need to understand and evaluate their work.ß
+**Memory** - Memory gives agents the shared context they need to cooperate, and gives you the information you need to understand and evaluate their work.
 
 **Workflow** — DAG-based pipelines where steps run in dependency order. Steps can be LLM calls (with optional tools) or pure data transformations. Output flows from each step to its dependents.
 
