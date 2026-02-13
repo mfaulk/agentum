@@ -1,6 +1,8 @@
-# Yet Another Agentic Framework
+# Agentum
 
-A minimal Rust library for building LLM-powered applications through DAG-based workflows. Built as an educational resource — every layer is explicit, readable, and avoids magic so you can understand how agentic AI patterns work under the hood.
+Agentum is a Rust framework for building large-scale, multi-agent applications with structured orchestration, tool integration, and reliable execution.
+
+Agentum provides the core primitives to compose Agents, Tools, Memory, and Workflows into production-grade systems. It emphasizes explicit control over planning, state, and execution. Complex multi-agent behavior is debuggable, testable, and deterministic where it matters. Use it to build agentic services that scale from local prototypes to distributed deployments without rewriting your architecture.
 
 ## Core Concepts
 
