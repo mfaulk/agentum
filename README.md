@@ -1,4 +1,4 @@
-# Agentic Framework
+# Yet Another Agentic Framework
 
 A minimal Rust library for building LLM-powered applications through DAG-based workflows. Built as an educational resource — every layer is explicit, readable, and avoids magic so you can understand how agentic AI patterns work under the hood.
 
