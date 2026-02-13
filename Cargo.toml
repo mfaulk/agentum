@@ -1,8 +1,8 @@
 [package]
 name = "agentum"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
-description = "A minimal Rust library for building LLM-powered applications through DAG-based workflows"
+description = "Multi-Agent Orchestration at Scale"
 license = "MIT"
 repository = "https://github.com/mfaulk/agentum"
 readme = "README.md"
