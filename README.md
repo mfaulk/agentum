@@ -124,45 +124,12 @@ async fn main() -> agentum::Result<()> {
 
 ## Examples
 
-Three runnable programs with progressive complexity:
-
 | Example | Run | What it demonstrates |
 |---------|-----|----------------------|
 | `simple_chat` | `cargo run --example simple_chat` | Single LLM call, message types, response handling |
 | `tool_calling` | `cargo run --example tool_calling` | Tool trait, registry, dispatch, both response paths |
 | `workflow` | `cargo run --example workflow` | Builder API, DAG execution, data flow between steps |
 
-All examples require `OPENAI_API_KEY` to be set and print a clear error if it's missing.
-
-## Architecture
-
-```
-src/
-├── lib.rs          # Public API re-exports
-├── model.rs        # Model async trait (dyn-safe via async-trait)
-├── message.rs      # Message and Role types
-├── types.rs        # ModelResponse, ModelOptions, ToolCall, ToolDefinition
-├── error.rs        # Structured errors (runtime / tool / framework)
-├── tool.rs         # Tool trait and ToolRegistry
-├── openai/         # OpenAI Chat Completions provider (raw reqwest)
-│   ├── mod.rs      # OpenAiProvider with Model impl
-│   └── types.rs    # Wire-format serde types (pub(crate))
-└── workflow/
-    ├── mod.rs       # Workflow struct, DAG validation (petgraph)
-    ├── executor.rs  # Topological execution with data flow
-    └── builder.rs   # WorkflowBuilder with build-time validation
-```
-
-## Dependencies
-
-| Crate | Purpose |
-|-------|---------|
-| `tokio` | Async runtime |
-| `reqwest` | HTTP client (rustls TLS) |
-| `serde` / `serde_json` | JSON serialization |
-| `async-trait` | Dyn-safe async traits |
-| `thiserror` | Structured error types |
-| `petgraph` | DAG validation and topological sort |
 
 ## License
 
