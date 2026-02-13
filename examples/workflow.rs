@@ -25,7 +25,7 @@
 //!
 //! Requires the `OPENAI_API_KEY` environment variable to be set.
 
-use agentic_framework::{Model, OpenAiProvider, Workflow};
+use agentum::{Model, OpenAiProvider, Workflow};
 use serde_json::json;
 
 /// A short article to summarize and translate.

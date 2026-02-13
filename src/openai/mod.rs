@@ -6,9 +6,9 @@
 //! # Usage
 //!
 //! ```rust,no_run
-//! use agentic_framework::{OpenAiProvider, Model, Message, ModelOptions};
+//! use agentum::{OpenAiProvider, Model, Message, ModelOptions};
 //!
-//! # async fn example() -> agentic_framework::Result<()> {
+//! # async fn example() -> agentum::Result<()> {
 //! let provider = OpenAiProvider::from_env("gpt-4o")?;
 //! let messages = vec![Message::user("Hello!")];
 //! let response = provider.chat(&messages, &ModelOptions::default()).await?;
@@ -42,7 +42,7 @@ use types::{
 /// [`OpenAiProvider::from_env`] to read the key from `OPENAI_API_KEY`:
 ///
 /// ```rust,no_run
-/// use agentic_framework::OpenAiProvider;
+/// use agentum::OpenAiProvider;
 ///
 /// // From environment variable:
 /// let provider = OpenAiProvider::from_env("gpt-4o").unwrap();

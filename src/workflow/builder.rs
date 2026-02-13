@@ -14,7 +14,7 @@
 //! # Example
 //!
 //! ```ignore
-//! use agentic_framework::Workflow;
+//! use agentum::Workflow;
 //! use serde_json::json;
 //!
 //! let wf = Workflow::builder()

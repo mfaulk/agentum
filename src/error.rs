@@ -46,7 +46,7 @@ pub enum Error {
     Config(String),
 }
 
-/// Convenience Result alias for the agentic-framework library.
+/// Convenience Result alias for the agentum library.
 pub type Result<T> = std::result::Result<T, Error>;
 
 /// Errors that can occur during workflow construction via [`WorkflowBuilder`].

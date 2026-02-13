@@ -19,8 +19,8 @@
 //!
 //! Requires the `OPENAI_API_KEY` environment variable to be set.
 
-use agentic_framework::error::Result;
-use agentic_framework::{
+use agentum::error::Result;
+use agentum::{
     Message, Model, ModelOptions, ModelResponse, OpenAiProvider, Tool, ToolRegistry,
 };
 use async_trait::async_trait;

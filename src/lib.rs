@@ -1,4 +1,4 @@
-//! # Agentic Framework
+//! # Agentum
 //!
 //! A minimal Rust library for building LLM-powered applications through
 //! DAG-based workflows. Provides core abstractions for model interaction,
@@ -24,7 +24,7 @@ pub mod openai;
 pub mod workflow;
 
 // Re-export primary types for convenience.
-// Users can `use agentic_framework::{Model, Message, ...}` instead of
+// Users can `use agentum::{Model, Message, ...}` instead of
 // reaching into submodules.
 pub use error::{BuilderError, BuilderErrors, Error, Result};
 pub use message::{Message, Role};

@@ -17,7 +17,7 @@
 //!
 //! Requires the `OPENAI_API_KEY` environment variable to be set.
 
-use agentic_framework::{Message, Model, ModelOptions, ModelResponse, OpenAiProvider};
+use agentum::{Message, Model, ModelOptions, ModelResponse, OpenAiProvider};
 
 #[tokio::main]
 async fn main() {

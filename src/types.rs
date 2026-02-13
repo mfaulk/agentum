@@ -61,7 +61,7 @@ impl ModelResponse {
 /// Uses a builder-lite pattern for ergonomic construction:
 ///
 /// ```rust
-/// use agentic_framework::types::ModelOptions;
+/// use agentum::types::ModelOptions;
 ///
 /// let opts = ModelOptions::new()
 ///     .with_temperature(0.7)

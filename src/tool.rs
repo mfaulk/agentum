@@ -10,8 +10,8 @@
 //!
 //! ```rust,ignore
 //! use async_trait::async_trait;
-//! use agentic_framework::{Tool, ToolRegistry};
-//! use agentic_framework::error::Result;
+//! use agentum::{Tool, ToolRegistry};
+//! use agentum::error::Result;
 //! use serde_json::json;
 //!
 //! struct Calculator;

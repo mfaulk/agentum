@@ -22,10 +22,10 @@ cargo run --example simple_chat
 ### Single LLM Call
 
 ```rust
-use agentic_framework::{Message, Model, ModelOptions, ModelResponse, OpenAiProvider};
+use agentum::{Message, Model, ModelOptions, ModelResponse, OpenAiProvider};
 
 #[tokio::main]
-async fn main() -> agentic_framework::Result<()> {
+async fn main() -> agentum::Result<()> {
     let provider = OpenAiProvider::from_env("gpt-4o-mini")?;
     let messages = vec![
         Message::system("You are a helpful assistant."),
@@ -44,7 +44,7 @@ async fn main() -> agentic_framework::Result<()> {
 ### Tool Calling
 
 ```rust
-use agentic_framework::{Tool, ToolRegistry, Model, Message, ModelOptions, ModelResponse, OpenAiProvider};
+use agentum::{Tool, ToolRegistry, Model, Message, ModelOptions, ModelResponse, OpenAiProvider};
 use async_trait::async_trait;
 
 struct Calculator;
@@ -60,14 +60,14 @@ impl Tool for Calculator {
             "required": ["expression"]
         })
     }
-    async fn execute(&self, args: serde_json::Value) -> agentic_framework::Result<String> {
+    async fn execute(&self, args: serde_json::Value) -> agentum::Result<String> {
         let expr = args["expression"].as_str().unwrap_or("0");
         Ok(format!("Result: {expr}"))
     }
 }
 
 #[tokio::main]
-async fn main() -> agentic_framework::Result<()> {
+async fn main() -> agentum::Result<()> {
     let provider = OpenAiProvider::from_env("gpt-4o-mini")?;
     let mut registry = ToolRegistry::new();
     registry.register(Calculator)?;
@@ -92,11 +92,11 @@ async fn main() -> agentic_framework::Result<()> {
 ### Workflow Pipeline
 
 ```rust
-use agentic_framework::{Model, OpenAiProvider, Workflow};
+use agentum::{Model, OpenAiProvider, Workflow};
 use serde_json::json;
 
 #[tokio::main]
-async fn main() -> agentic_framework::Result<()> {
+async fn main() -> agentum::Result<()> {
     let provider = OpenAiProvider::from_env("gpt-4o-mini")?;
 
     let workflow = Workflow::builder()
